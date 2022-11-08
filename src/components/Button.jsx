@@ -16,6 +16,9 @@ const Button = (props) => {
             case "warning": 
                 extraClasses = 'bg-yellow-500';
                 break;
+            case "good":
+                extraClasses = 'bg-green-500';
+                break;
         } 
         if(block) {
             extraClasses += ' ' + 'w-full'
