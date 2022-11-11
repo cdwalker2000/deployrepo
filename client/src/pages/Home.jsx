@@ -27,17 +27,35 @@ const Panel = ({children,title,className}) => {
 // Main
 const Home = () => {
     // order list
-    const [order,setOrder] = useState([
-        {name: 'test order',price: '$100.8'},
-    ])
-    // order displaying
-    const initMockList = () => {
-        const mock = Array.from(new Array(20)).map((_,index) => ({name: `order ${index}`,price: `$${Math.round(Math.random() * 50 + 10)}`}))
-        setOrder(mock)
-    }
+    const [order,setOrder] = useState([])
+
+
     useEffect(() => {
-        initMockList()
-    },[])
+        fetchOrders();
+    }, [])
+    
+    const fetchOrders = async () => {
+        console.log("Got here1");
+        const result = await fetch(`http://localhost:8080/orders`)      // change to final deployment site
+        console.log(result);
+        result
+            .json()
+            .then(result => setOrder(result))
+            .catch(e => console.log(e))
+        console.log("Got here3");
+        console.log(result.json());
+    }
+
+
+    
+    // // order displaying
+    // const initMockList = () => {
+    //     const mock = Array.from(new Array(20)).map((_,index) => ({name: `order ${index}`,price: `$${Math.round(Math.random() * 50 + 10)}`}))
+    //     setOrder(mock)
+    // }
+    // useEffect(() => {
+    //     initMockList()
+    // },[])
     return (
         <>
             <div className="flex flex-col md:flex-row h-[600px] relative">
@@ -46,11 +64,16 @@ const Home = () => {
                 </div>
                 <Panel title="Current Order" className="mr-[25px] relative w-full md:w-[500px] h-full flex flex-col items-between">
                     <div className="h-full px-[10px] overflow-auto">
-                            {order.map((item,index) => (
-                                <OrderItem {...item} key={index} />
+                            {order.map(order => (
+                                // <OrderItem {...item} key={index} />
+                                <div>
+                                <p>{order.id}</p>
+                                <p>{order.protein_id}</p>
+                                <p>{order.time}</p>
+                                </div>
                             ))}
                         </div>
-                        <div class="min-h-[60px] items-center flex w-full">
+                        <div className="min-h-[60px] items-center flex w-full">
                             <Button className="mx-[5px]">Cancel</Button>
                             <Button className="mx-[5px]">Delete</Button>
                             <Button className="mx-[5px]">Add Order</Button>
