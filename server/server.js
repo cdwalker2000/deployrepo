@@ -19,6 +19,9 @@ app.get('/', (request, response) => {
   })
 
 app.get('/orders', db.getOrders)
+app.get('/proteins', db.getProteins)
+app.get('/toppings', db.getToppings)
+app.get('/sauces', db.getSauces)
 app.post('/users', db.createUser)
 
 app.listen(port, () => {

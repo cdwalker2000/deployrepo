@@ -21,18 +21,49 @@ const pool = new Pool({
 // We’ll SELECT all users and order by id.
 
 const getOrders = (request, response) => {
-    console.log("Got here2");
-    pool.query('SELECT * FROM orders LIMIT(5)', (error, results) => {
-      if (error) {
-        throw error
-      }
-      response.status(200).json(results.rows)
-      console.log(results.rows)
-    })
-    console.log("ASDASDAS");
-    
-  }
+  console.log("Got here2");
+  pool.query('SELECT * FROM orders LIMIT(5)', (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+    console.log(results.rows)
+  })
+  console.log("ASDASDAS");
+}
 
+// 
+
+const getProteins = (request, response) => {
+  pool.query("SELECT * FROM inventory WHERE category = 'protein';", (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+// 
+
+const getToppings = (request, response) => {
+  pool.query("SELECT * FROM inventory WHERE category = 'topping';", (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+// 
+
+const getSauces = (request, response) => {
+  pool.query("SELECT * FROM inventory WHERE category = 'sauce';", (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
 
 //   The API will take a GET and POST request to the /users endpoint. In the POST request, we’ll be adding a new user. 
 //   In this function, we’re extracting the name and email properties from the request body, and INSERTing the values.
@@ -58,6 +89,9 @@ const getOrders = (request, response) => {
 
 
   module.exports = {
+    getOrders,
+    getProteins,
+    getToppings,
+    getSauces,
     createUser,
-    getOrders
   }
