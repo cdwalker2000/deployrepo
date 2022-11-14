@@ -34,6 +34,17 @@ const getOrders = (request, response) => {
 
 // 
 
+const getCart = (request, response) => {
+  pool.query("SELECT * FROM inventory WHERE category = 'protein';", (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+// 
+
 const getProteins = (request, response) => {
   pool.query("SELECT * FROM inventory WHERE category = 'protein';", (error, results) => {
     if (error) {
@@ -90,6 +101,7 @@ const getSauces = (request, response) => {
 
   module.exports = {
     getOrders,
+    getCart,
     getProteins,
     getToppings,
     getSauces,

@@ -15,10 +15,10 @@ app.use(
 // app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('/', (request, response) => {
-    response.json({ info: 'Node.js, Express, and Postgres API' })
-  })
+  response.json({ info: 'Node.js, Express, and Postgres API' })
+})
 
-app.get('/orders', db.getOrders)
+app.get('/cart', db.getCart)
 app.get('/proteins', db.getProteins)
 app.get('/toppings', db.getToppings)
 app.get('/sauces', db.getSauces)

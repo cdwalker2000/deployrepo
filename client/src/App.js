@@ -45,6 +45,8 @@ function App() {
         submitUserEdit={submitNewUser}
         handleInputChange={handleInputChange}
       />
+      {/* <Manager/> */}
+      {/* <Customer/> */}
     </div>
   );
 }
