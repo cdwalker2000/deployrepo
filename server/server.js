@@ -19,6 +19,10 @@ app.get('/', (request, response) => {
 })
 
 app.get('/cart', db.getCart)
+app.post('/clear_cart', db.clearCart)
+app.post('/add_dish', db.addDish)
+
+
 app.get('/proteins', db.getProteins)
 app.get('/toppings', db.getToppings)
 app.get('/sauces', db.getSauces)

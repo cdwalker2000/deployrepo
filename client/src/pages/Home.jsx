@@ -5,6 +5,8 @@ import { HiOutlineVolumeUp } from 'react-icons/hi'
 // import NavBar from '../components/NavBar'
 // import { useCustomContext } from '../Context/Provider'
 // import menu from '../assets/menu.webp'
+import Ingredient from '../components/Ingredient'
+import CartItem from '../components/CartItem'
 
 //Order items
 const OrderItem = ({price,name}) => {
@@ -31,10 +33,12 @@ const ProteinItem = ({name}) => {
     )
 }
 
+
+
 // Panels
 const Panel = ({children,title,className}) => {
     return (
-        <div className={'bg-white rounded-[15px] shadow-lg p-[5px] md:p-[20px] ' + className}>
+        <div className={'bg-white overflow-auto rounded-[15px] shadow-lg p-[5px] md:p-[20px] ' + className}>
             <p className="mb-[10px] pb-[12px] border-gray-500 border-b-1 text-left text-xl font-bold text-blue-500">{title}</p>
             {children}
         </div>
@@ -45,28 +49,31 @@ const Panel = ({children,title,className}) => {
 const Home = () => {
     
     // const initialNewUserState = {"fname": "", "lname": "", "username": "", "password": "", "role": "customer"}
+    const initialCurrentDish = {"dish_name": "_", "protein_name": "_", "ingr1_name": "_", "ingr2_name": "_", "ingr3_name": "_", "ingr4_name": "_", "sauce_name": "_", "have_drink": -1, "total_cost": -1.11}
 
-    // const [cart,setCart] = useState([])
+    const [cart,setCart] = useState([])
     const [proteins,setProteins] = useState([])
     const [toppings,setToppings] = useState([])
     const [sauces,setSauces] = useState([])
+    const [currentDish, setCurrentDish] = useState(initialCurrentDish)
+    const [ingrCount, setIngrCount] = useState(0)
     // const [newUser, setNewUser] = useState(initialNewUserState)
 
 
     useEffect(() => {
-        // fetchCart();
+        fetchCart();
         fetchProteins();
         fetchToppings();
         fetchSauces();
     }, [])
     
-    // const fetchCart = async () => {
-    //     const result = await fetch(`http://localhost:8080/cart`)      // change to final deployment site
-    //     result
-    //         .json()
-    //         .then(result => setCart(result))
-    //         .catch(e => console.log(e))
-    // }
+    const fetchCart = async () => {
+        const result = await fetch(`http://localhost:8080/cart`)      // change to final deployment site
+        result
+            .json()
+            .then(result => setCart(result))
+            .catch(e => console.log(e))
+    }
 
     const fetchProteins = async () => {
         const result = await fetch(`http://localhost:8080/proteins`)      // change to final deployment site
@@ -101,6 +108,80 @@ const Home = () => {
         // setNewUser({ ...newUser, [id]: value })
     }
 
+    const addIngredient = (item, category) => {
+        let colname = "";
+        let canAddIngredient = true;
+        if (category == "protein") {
+            colname = "protein_name";
+        }
+        if (category == "topping") {
+            if (ingrCount < 4) {
+                colname = "ingr" + (ingrCount+1) + "_name";
+                setIngrCount(ingrCount + 1);
+            }
+            else {
+                canAddIngredient =  false;
+            }
+        }
+        if (category == "sauce") {
+            colname = "sauce_name";
+        }
+        
+        if (canAddIngredient) {
+            console.log(colname);
+            setCurrentDish({ ...currentDish, [colname]: item.ingredient_name });
+        }
+        else {
+            console.log("Can't add ingredient");
+        }
+    }
+
+    const addDishToCart = async (event) => {
+        event.preventDefault()
+        
+        console.log("addDishToCart sends response");
+        
+        const response = await fetch('http://localhost:8080/add_dish', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(currentDish),
+        })
+        console.log("addDishToCart got response");
+        console.log(response)
+        // response
+        //   .json()
+        //   .then(result => set(result))
+        //   .catch(e => console.log(e))
+        fetchCart();
+        setCurrentDish(initialCurrentDish);
+        setIngrCount(0);
+    }
+
+    const cancelOrder = async (event) => {
+        event.preventDefault()
+        
+        console.log("clearCart sends response");
+        
+        const response = await fetch('http://localhost:8080/clear_cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: "",
+        })
+        console.log("clearCart got response");
+        console.log(response)
+        // response
+        //   .json()
+        //   .then(result => set(result))
+        //   .catch(e => console.log(e))
+        fetchCart();
+        setCurrentDish(initialCurrentDish);
+        setIngrCount(0);
+    }
+
     // const submitNewUser = async (event) => {
     //     event.preventDefault()
     
@@ -120,18 +201,18 @@ const Home = () => {
     //   const toppings = ["pickled onions", "diced cucumbers", "citrus couscous", "roasted cauliflower", "tomato-onion salad", "kalamata olives", "roasted peppers", "red cabbage slaw"]
     //   const sauces = ["hummus", "red pepper hummus", "jalapeno feta", "tzatziki", "greek vinaigrette", "harissa"]
       // checkOrder data
-      const menuList = [
-          {
-              name: 'pita',
-              children: ["falafel", "diced cucumbers", "tomato-onion salad", "roasted cauliflower", "roasted peppers", "tzatziki", "No Drink",],
-              price: 7.69
-          },
-          {
-              name: 'salad',
-              children: ["falafel", "diced cucumbers", "tomato-onion salad", "roasted cauliflower", "roasted peppers", "tzatziki", "No Drink",],
-              price: 7.69
-          }
-      ]
+    //   const menuList = [
+    //       {
+    //           name: 'pita',
+    //           children: ["falafel", "diced cucumbers", "tomato-onion salad", "roasted cauliflower", "roasted peppers", "tzatziki", "No Drink",],
+    //           price: 7.69
+    //       },
+    //       {
+    //           name: 'salad',
+    //           children: ["falafel", "diced cucumbers", "tomato-onion salad", "roasted cauliflower", "roasted peppers", "tzatziki", "No Drink",],
+    //           price: 7.69
+    //       }
+    //   ]
       const mainList =
           [
               { name: "grain bowl", price: '7.79' },
@@ -141,6 +222,10 @@ const Home = () => {
               { name: "combo with fries and drink", price: '8.99' },
               { name: "pita", price: '7.69' }
           ]
+    const starterList =
+    [
+        { name: "hummus", price: '3.79' }
+    ]
     //   const { user, handleChange } = useCustomContext();
     const user = {firstName: "", lastName: ""}
       // order list
@@ -151,8 +236,8 @@ const Home = () => {
       // get the total price
       const getTotal = () => {
           let sum = 0;
-          sum = menuList.reduce((cur,item) => {
-              return cur + item.price
+          sum = cart.reduce((cur,item) => {
+              return cur + item.total_cost
           },0)
           // keep 2 digits
           return sum.toFixed(2);
@@ -176,18 +261,8 @@ const Home = () => {
                 </div>
                 <Panel title="Current Order/Check Out" className="mr-[25px] relative w-full md:w-[500px] h-full flex flex-col items-between">
                     <div className="h-full px-[10px] overflow-auto">
-                        {menuList.map((item, index) => (
-                            <div className="mb-[20px]">
-                                <div className="flex font-bold text-xl justify-between items-center">
-                                    <span>{item.name}</span>
-                                    <span className="text-red-500">${item.price}</span>
-                                </div>
-                                <div className="text-right mt-[12px]">
-                                    {item.children && item.children.map((citem, index) => (
-                                        <div className="text-left" key={index}>{citem}</div>
-                                    ))}
-                                </div>
-                            </div>
+                        {cart.map((item, index) => (
+                            <CartItem key={item + "_" + index} item={item} index={index} />
                         ))}
                         <div className="flex font-bold text-xl justify-between items-center">
                             <span>Total</span>
@@ -195,9 +270,9 @@ const Home = () => {
                         </div>
                     </div>
                     <div className="min-h-[60px] items-center flex w-full">
-                        <Button className="mx-[5px]">Cancel</Button>
-                        <Button className="mx-[5px]">Delete</Button>
-                        <Button className="mx-[5px]">Add Order</Button>
+                        <Button onClick={cancelOrder} className="mx-[5px]">Cancel</Button>
+                        <Button className="mx-[5px]">Delete Last Dish</Button>
+                        <Button onClick={addDishToCart} className="mx-[5px]">Add Dish</Button>
                         <Button className="mx-[5px]">Confirm</Button>
                     </div>
                 </Panel>
@@ -231,7 +306,7 @@ const Home = () => {
                 <div className={'w-[50%] mr-[20px] h-full flex flex-col justify-between'}>
                     <Panel className="h-[48%]" title="Main">
                         {mainList.map((item, index) => (
-                            <div key={index} className="flex items-center justify-between mb-[12px]">
+                            <div key={"main_" + item.name} className="flex items-center justify-between mb-[12px]">
                                 <div className="w-[50px] h-[50px] rounded-[4px] overflow-hidden">
                                     {/* <img className="w-full h-full" src={menu} /> */}
                                 </div>
@@ -241,8 +316,8 @@ const Home = () => {
                         ))}
                     </Panel>
                     <Panel className="h-[48%]" title="Starter">
-                        {mainList.map((item, index) => (
-                            <div key={index} className="flex items-center justify-between mb-[12px]">
+                        {starterList.map((item, index) => (
+                            <div key={"starter_" + item.name} className="flex items-center justify-between mb-[12px]">
                                 <div className="w-[50px] h-[50px] rounded-[4px] overflow-hidden">
                                     {/* <img className="w-full h-full" src={menu} /> */}
                                 </div>
@@ -256,11 +331,12 @@ const Home = () => {
                     <Panel className="h-[48%]" title="Protein">
                         {
                             proteins.map((item, index) => (
-                                <div key={index} className="flex items-center justify-between mb-[12px]">
+                                <div key={"protein_" + item.ingredient_name} className="flex items-center justify-between mb-[12px]">
                                     <div className="w-[50px] h-[50px] rounded-[4px] overflow-hidden">
                                         {/* <img className="w-full h-full" src={menu} /> */}
                                     </div>
-                                    <Button>{item.ingredient_name}</Button>
+                                    {/* <Button >{item.ingredient_name}</Button> */}
+                                    <Ingredient label={item.ingredient_name} onClick={() => addIngredient(item, "protein")} />
                                 </div>
                             ))
                         }
@@ -269,11 +345,12 @@ const Home = () => {
                         <Panel className="w-[48%] h-full" title="Topings">
                             {
                                 toppings.map((item, index) => (
-                                    <div key={index} className="flex items-center justify-between mb-[12px]">
+                                    <div key={"topping_" + item.ingredient_name} className="flex items-center justify-between mb-[12px]">
                                         <div className="w-[50px] h-[50px] rounded-[4px] overflow-hidden">
                                             {/* <img className="w-full h-full" src={menu} /> */}
                                         </div>
-                                        <Button key={index}>{item.ingredient_name}</Button>
+                                    {/* <Button >{item.ingredient_name}</Button> */}
+                                    <Ingredient label={item.ingredient_name} onClick={() => addIngredient(item, "topping")} />
                                     </div>
                                 ))
                             }
@@ -281,11 +358,12 @@ const Home = () => {
                         <Panel className="w-[48%] h-full" title="Sauces">
                             {
                                 sauces.map((item, index) => (
-                                    <div key={index} className="flex items-center justify-between mb-[12px]">
+                                    <div key={"sauce_" + item.ingredient_name} className="flex items-center justify-between mb-[12px]">
                                         <div className="w-[50px] h-[50px] rounded-[4px] overflow-hidden">
                                             {/* <img className="w-full h-full" src={menu} /> */}
                                         </div>
-                                        <Button key={index}>{item.ingredient_name}</Button>
+                                        {/* <Button >{item.ingredient_name}</Button> */}
+                                        <Ingredient label={item.ingredient_name} onClick={() => addIngredient(item, "sauce")} />
                                     </div>
                                 ))
                             }

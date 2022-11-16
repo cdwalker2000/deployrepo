@@ -1,8 +1,8 @@
 import React from 'react'
 
 // buttons
-const Button = (props) => {
-    const { children,round,className,type,block,onClick } = props;
+const Ingredient = (props) => {
+    const { label, onClick, round,className,type,block} = props;
     // styles
     const baseClasses = () => {
         let extraClasses = '';
@@ -26,11 +26,11 @@ const Button = (props) => {
         return ' ' + 'px-[15px] h-[40px] text-white hover:opacity-75 shadow-lg leading-[40px] text-center bg-blue-500 cursor-pointer ' + extraClasses
     }
     return (
-        <div 
-        onClick={onClick}
-        className={`${round? 'rounded-full':'rounded-[4px]' + baseClasses() + ' ' + className } 
-        `}>{children}</div>
+        <div className={`${round? 'rounded-full':'rounded-[4px]' + baseClasses() + ' ' + className }`}>
+            <button onClick={onClick}>{label}</button>
+        </div>
+        
     )
 }
 
-export default Button
+export default Ingredient
