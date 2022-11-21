@@ -1,9 +1,9 @@
 import React from 'react'
 
-// buttons
+// define the buttons
 const Button = (props) => {
-    const { children,round,className,type,block,onClick } = props;
-    // styles
+    const { children, round, className, type, block, onClick } = props;
+    // what kind of buttons we will have
     const baseClasses = () => {
         let extraClasses = '';
         switch(type) {
@@ -15,9 +15,6 @@ const Button = (props) => {
                 break;
             case "warning": 
                 extraClasses = 'bg-yellow-500';
-                break;
-            case "good":
-                extraClasses = 'bg-green-500';
                 break;
         } 
         if(block) {

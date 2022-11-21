@@ -1,11 +1,20 @@
 import './App.css';
-import Home from './pages/Home';
+import Server from './pages/Server';
+import Login from './pages/Login';
+import Home from './pages/Home'
+import Accessibility from './pages/Accessibility';
+import { BrowserRouter,Routes,Route } from 'react-router-dom'
 
 function App() {
   return (
-    <div className="App bg-gray-100 p-[10px] md:px-[45px] md:py-[80px]">
-      <Home/>
-    </div>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home/>}/>
+            <Route path="/server" element={<Server/>}/>
+            <Route path="/login" element={<Login/>}/>
+            <Route path="/acc" element={<Accessibility/>}/>
+          </Routes>
+        </BrowserRouter>
   );
 }
 
