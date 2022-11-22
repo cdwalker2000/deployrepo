@@ -172,7 +172,7 @@ const Home = () => {
         
         console.log("addDishToCart sends request");
         
-        const response = await fetch('http://localhost:8080/add_dish', {
+        const response = await fetch('http://localhost:8080/add_dish_to_cart', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

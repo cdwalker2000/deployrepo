@@ -65,7 +65,7 @@ const clearCart = (request, response) => {
 
 //
 
-const addDish = (request, response) => {
+const addDishToCart = (request, response) => {
   const { dish_name, protein_name, ingr1_name, ingr2_name, ingr3_name, ingr4_name, sauce_name, have_drink, total_cost } = request.body
 
   // console.log("Got here4");
@@ -160,6 +160,68 @@ const getSauces = (request, response) => {
   })
 }
 
+//
+
+const getInventory = (request, response) => {
+  const { ingredient_name } = request.body
+  let query = "SELECT * FROM inventory WHERE ingredient_name LIKE '%" + ingredient_name + "%';";
+
+  pool.query(query, (error, results) => {
+    if (error) {
+      throw error
+    } 
+    console.log(results.rows);
+    response.status(200).json(results.rows)
+  })
+}
+
+//
+
+const addNewServer = (request, response) => {
+  const { new_fname, new_lname, new_username, new_password } = request.body
+
+  // console.log("Got here4");
+  console.log(new_fname, new_lname, new_username, new_password);
+
+  pool.query('INSERT INTO users (username, password, fname, lname, role) VALUES ($1, $2, $3, $4, $5);', [new_username, new_password, new_fname, new_lname, "server"], (error, result) => {
+    if (error) {
+      throw error
+    }
+    response.status(201).send(`New server added`);
+  })
+}
+
+//
+
+const addNewDish = (request, response) => {
+  const { new_dish_name, new_dish_price } = request.body
+
+  // console.log("Got here4");
+  console.log(new_dish_name, new_dish_price);
+
+  pool.query("INSERT INTO dish (dish_name, dish_price, dish_type) VALUES ($1, $2, $3);", [new_dish_name, new_dish_price, "starter"], (error, result) => {
+    if (error) {
+      throw error
+    }
+    response.status(201).send(`New dish item added`);
+  })
+}
+
+//
+
+const addNewInventory = (request, response) => {
+  const { new_dish_name, new_dish_price } = request.body
+
+  // console.log("Got here4");
+  console.log(new_dish_name, new_dish_price);
+
+  pool.query("INSERT INTO inventory (ingredient_name, stock, restock, location, category) VALUES ($1, $2, $3, $4, $5);", [new_dish_name, 0, 1000, "fridge", "starter"], (error, result) => {
+    if (error) {
+      throw error
+    }
+    response.status(201).send(`New inventory item added`);
+  })
+}
 
 // 
 
@@ -175,12 +237,24 @@ const getSalesReport = (request, response) => {
   })
 }
 
+// 
+
+const getRestockReport = (request, response) => {
+  pool.query("SELECT ingredient_name, stock, restock FROM inventory WHERE stock < restock;", (error, results) => {
+    if (error) {
+      throw error
+    } 
+    console.log(results.rows);
+    response.status(200).json(results.rows)
+  })
+}
+
 
   module.exports = {
     getOrders,
     getCart,
     clearCart,
-    addDish,
+    addDishToCart,
     deleteLastDish,
     getMains,
     getStarters,
@@ -188,5 +262,10 @@ const getSalesReport = (request, response) => {
     getProteins,
     getToppings,
     getSauces,
-    getSalesReport
+    getInventory,
+    addNewServer,
+    addNewDish,
+    addNewInventory,
+    getSalesReport,
+    getRestockReport,
   }

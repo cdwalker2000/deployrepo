@@ -20,7 +20,7 @@ app.get('/', (request, response) => {
 
 app.get('/cart', db.getCart)
 app.post('/clear_cart', db.clearCart)
-app.post('/add_dish', db.addDish)
+app.post('/add_dish_to_cart', db.addDishToCart)
 app.delete('/delete_last_dish', db.deleteLastDish)
 
 app.get('/mains', db.getMains)
@@ -31,8 +31,13 @@ app.get('/proteins', db.getProteins)
 app.get('/toppings', db.getToppings)
 app.get('/sauces', db.getSauces)
 
+app.post('/inventory', db.getInventory)
+app.post('/new_server', db.addNewServer)
+app.post('/add_new_dish', db.addNewDish)
+app.post('/add_new_inventory', db.addNewInventory)
 
 app.post('/sales_report', db.getSalesReport)
+app.get('/restock_report', db.getRestockReport)
 
 app.listen(port, () => {
   console.log(`App running on port ${port}.`)
