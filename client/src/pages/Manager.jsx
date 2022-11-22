@@ -175,13 +175,16 @@ const Manager = () => {
                 
                 <div className={'w-[500px] h-full flex flex-col justify-between'}>
                         <Panel className="h-[48%]" title="Enter New Employee">
-                           
+                            <div className="mt-[20px]">
                                 <Input id="new_fname" label="First Name" handleInputChange={handleInputChangeNewEmployee} value={newEmployee.new_fname}/>
                                 <Input id="new_lname" label="Last Name" handleInputChange={handleInputChangeNewEmployee} value={newEmployee.new_lname}/>
                             
                                 <Input id="new_username" label="Username" handleInputChange={handleInputChangeNewEmployee} value={newEmployee.new_username}/>
                                 <Input id="new_password" type="password" label="Password" handleInputChange={handleInputChangeNewEmployee} value={newEmployee.new_password}/>
+                            </div>
+                            <div className="flex justify-between">
                                 <Button onClick={addEmployee}>Add Server</Button>
+                            </div>
                         </Panel>
                         <Panel className="h-[48%]" title="Add New Item">
                             <div className="mt-[20px]">

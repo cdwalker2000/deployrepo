@@ -34,6 +34,21 @@ const getOrders = (request, response) => {
 
 // 
 
+const changePassword = (request, response) => {
+  const { username, old_password, new_password } = request.body
+
+  console.log(username, old_password, new_password );
+
+  pool.query("UPDATE users SET password = $1 WHERE username = $2;", [new_password, username], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+// 
+
 const getCart = (request, response) => {
   pool.query("SELECT * FROM cart;", (error, results) => {
     if (error) {
@@ -177,17 +192,18 @@ const getInventory = (request, response) => {
 
 //
 
-const addNewServer = (request, response) => {
-  const { new_fname, new_lname, new_username, new_password } = request.body
+const addNewUser = (request, response) => {
+  const { new_fname, new_lname, new_username, new_password, new_role} = request.body
 
   // console.log("Got here4");
-  console.log(new_fname, new_lname, new_username, new_password);
+  console.log(new_fname, new_lname, new_username, new_password, new_role);
 
-  pool.query('INSERT INTO users (username, password, fname, lname, role) VALUES ($1, $2, $3, $4, $5);', [new_username, new_password, new_fname, new_lname, "server"], (error, result) => {
+  pool.query('INSERT INTO users (username, password, fname, lname, role) VALUES ($1, $2, $3, $4, $5);', [new_username, new_password, new_fname, new_lname, new_role], (error, result) => {
     if (error) {
       throw error
     }
-    response.status(201).send(`New server added`);
+    console.log(result.rows);
+    response.status(201).send(`New user added`);
   })
 }
 
@@ -252,6 +268,7 @@ const getRestockReport = (request, response) => {
 
   module.exports = {
     getOrders,
+    changePassword,
     getCart,
     clearCart,
     addDishToCart,
@@ -263,7 +280,7 @@ const getRestockReport = (request, response) => {
     getToppings,
     getSauces,
     getInventory,
-    addNewServer,
+    addNewUser,
     addNewDish,
     addNewInventory,
     getSalesReport,

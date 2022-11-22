@@ -27,9 +27,11 @@ const Home = () => {
     // const initialNewUserState = {"fname": "", "lname": "", "username": "", "password": "", "role": "customer"}
     const initialCurrentDish = {"dish_name": "_", "protein_name": "_", "ingr1_name": "_", "ingr2_name": "_", "ingr3_name": "_", "ingr4_name": "_", "sauce_name": "_", "have_drink": -1, "total_cost": -1.11}
     const initialCurrentServer = {"username": "", "old_password": "", "new_password": ""}
+    const initialNewCustomer = {"new_fname": "", "new_lname": "", "new_username": "", "new_password": "", "new_role": "customer"}
 
     const [cart,setCart] = useState([])
     const [currentServer,setCurrentServer] = useState(initialCurrentServer)
+    const [newCustomer,setNewCustomer] = useState(initialNewCustomer)
     const [mains,setMains] = useState([])
     const [starters,setStarters] = useState([])
     const [proteins,setProteins] = useState([])
@@ -102,6 +104,11 @@ const Home = () => {
         setCurrentServer({ ...currentServer, [id]: value })
     }
 
+    const handleChangeNewCustomer = event => {
+        const { id, value } = event.target
+        setNewCustomer({ ...newCustomer, [id]: value })
+    }
+
     const changePassword = async(event) => {
         event.preventDefault()
 
@@ -118,6 +125,24 @@ const Home = () => {
         setCurrentServer(initialCurrentServer);
 
         console.log("changePassword got response");
+    }
+
+    const addCustomer = async(event) => {
+        event.preventDefault()
+
+        console.log("addCustomer sent request");
+
+        const response = await fetch('http://localhost:8080/new_user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newCustomer),
+        })
+
+        setNewCustomer(initialNewCustomer);
+
+        console.log("addCustomer got response");
     }
 
     const addMain = (item) => {
@@ -302,14 +327,14 @@ const Home = () => {
                     </Panel>
                     <Panel className="h-[48%]" title="Register New Customer">
                         <div className="mt-[20px]">
-                            {/* <Input value={user.firstName} handleInputChange={e => handleChange(e.target.value, 'firstName')} label="First Name" />
-                            <Input value={user.lastName} handleInputChange={e => handleChange(e.target.value, 'lastName')} label="Last Name" /> */}
-                            <Input label="Username" />
-                            <Input type="password" label="Password" />
+                            <Input id="new_fname" label="First Name" handleInputChange={handleChangeNewCustomer} value={newCustomer.new_fname}/>
+                            <Input id="new_lname" label="Last Name" handleInputChange={handleChangeNewCustomer} value={newCustomer.new_lname}/>
+                        
+                            <Input id="new_username" label="Username" handleInputChange={handleChangeNewCustomer} value={newCustomer.new_username}/>
+                            <Input id="new_password" type="password" label="Password" handleInputChange={handleChangeNewCustomer} value={newCustomer.new_password}/>
                         </div>
                         <div className="flex justify-between">
-                            <Button>Cancel</Button>
-                            <Button type="danger">Register</Button>
+                            <Button onClick={addCustomer}>Add Customer</Button>
                         </div>
                     </Panel>
                 </div>

@@ -18,6 +18,8 @@ app.get('/', (request, response) => {
   response.json({ info: 'Node.js, Express, and Postgres API' })
 })
 
+app.post('/change_password', db.changePassword)
+
 app.get('/cart', db.getCart)
 app.post('/clear_cart', db.clearCart)
 app.post('/add_dish_to_cart', db.addDishToCart)
@@ -32,7 +34,7 @@ app.get('/toppings', db.getToppings)
 app.get('/sauces', db.getSauces)
 
 app.post('/inventory', db.getInventory)
-app.post('/new_server', db.addNewServer)
+app.post('/new_user', db.addNewUser)
 app.post('/add_new_dish', db.addNewDish)
 app.post('/add_new_inventory', db.addNewInventory)
 
