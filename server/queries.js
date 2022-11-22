@@ -35,11 +35,11 @@ const getOrders = (request, response) => {
 // 
 
 const changePassword = (request, response) => {
-  const { username, old_password, new_password } = request.body
+  const { username, old_password, updated_password } = request.body
 
-  console.log(username, old_password, new_password );
+  console.log(username, old_password, updated_password );
 
-  pool.query("UPDATE users SET password = $1 WHERE username = $2;", [new_password, username], (error, results) => {
+  pool.query("UPDATE users SET password = $1 WHERE username = $2;", [updated_password, username], (error, results) => {
     if (error) {
       throw error
     }
@@ -178,8 +178,8 @@ const getSauces = (request, response) => {
 //
 
 const getInventory = (request, response) => {
-  const { ingredient_name } = request.body
-  let query = "SELECT * FROM inventory WHERE ingredient_name LIKE '%" + ingredient_name + "%';";
+  const { check_ingredient_name } = request.body
+  let query = "SELECT * FROM inventory WHERE ingredient_name LIKE '%" + check_ingredient_name + "%';";
 
   pool.query(query, (error, results) => {
     if (error) {
@@ -210,12 +210,11 @@ const addNewUser = (request, response) => {
 //
 
 const addNewDish = (request, response) => {
-  const { new_dish_name, new_dish_price } = request.body
+  const { dish_name, dish_price } = request.body
 
-  // console.log("Got here4");
-  console.log(new_dish_name, new_dish_price);
+  console.log(dish_name, dish_price);
 
-  pool.query("INSERT INTO dish (dish_name, dish_price, dish_type) VALUES ($1, $2, $3);", [new_dish_name, new_dish_price, "starter"], (error, result) => {
+  pool.query("INSERT INTO dish (dish_name, dish_price, dish_type) VALUES ($1, $2, $3);", [dish_name, dish_price, "starter"], (error, result) => {
     if (error) {
       throw error
     }
@@ -225,17 +224,61 @@ const addNewDish = (request, response) => {
 
 //
 
+const updateDishPrice = (request, response) => {
+  const { dish_name, dish_price } = request.body
+
+  console.log(dish_name, dish_price);
+
+  pool.query("UPDATE dish SET dish_price = $1 WHERE dish_name = $2;", [dish_price, dish_name], (error, result) => {
+    if (error) {
+      throw error
+    }
+    response.status(201).send(`Existing dish price updated`);
+  })
+}
+
+//
+
 const addNewInventory = (request, response) => {
-  const { new_dish_name, new_dish_price } = request.body
+  const { dish_name, dish_price } = request.body
+  
+  console.log(dish_name, dish_price);
 
-  // console.log("Got here4");
-  console.log(new_dish_name, new_dish_price);
-
-  pool.query("INSERT INTO inventory (ingredient_name, stock, restock, location, category) VALUES ($1, $2, $3, $4, $5);", [new_dish_name, 0, 1000, "fridge", "starter"], (error, result) => {
+  pool.query("INSERT INTO inventory (ingredient_name, stock, restock, location, category) VALUES ($1, $2, $3, $4, $5);", [dish_name, 0, 1000, "fridge", "starter"], (error, result) => {
     if (error) {
       throw error
     }
     response.status(201).send(`New inventory item added`);
+  })
+}
+
+//
+
+const addNewRestock = (request, response) => {
+  const { time, ingredient_name, seller_name, cost, num_servings }= request.body
+  
+  console.log(time, ingredient_name, seller_name, cost, num_servings);
+
+  pool.query("INSERT INTO restock (time, seller_name, ingredient_name, cost, num_servings) VALUES ($1, $2, $3, $4, $5);", [time, seller_name, ingredient_name, cost, num_servings], (error, result) => {
+    if (error) {
+      throw error
+    }
+    response.status(201).send(`New restock order submitted`);
+  })
+}
+
+//
+
+const updateInventoryStock = (request, response) => {
+  const { ingredient_name, seller_name, cost, num_servings }= request.body
+  
+  console.log(ingredient_name, num_servings);
+
+  pool.query("UPDATE inventory SET stock = stock + $1 WHERE ingredient_name = $2;", [num_servings, ingredient_name], (error, result) => {
+    if (error) {
+      throw error
+    }
+    response.status(201).send(`Inventory updated`);
   })
 }
 
@@ -283,6 +326,9 @@ const getRestockReport = (request, response) => {
     addNewUser,
     addNewDish,
     addNewInventory,
+    updateDishPrice,
+    addNewRestock,
+    updateInventoryStock,
     getSalesReport,
     getRestockReport,
   }

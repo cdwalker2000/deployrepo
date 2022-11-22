@@ -26,7 +26,7 @@ const Home = () => {
     
     // const initialNewUserState = {"fname": "", "lname": "", "username": "", "password": "", "role": "customer"}
     const initialCurrentDish = {"dish_name": "_", "protein_name": "_", "ingr1_name": "_", "ingr2_name": "_", "ingr3_name": "_", "ingr4_name": "_", "sauce_name": "_", "have_drink": -1, "total_cost": -1.11}
-    const initialCurrentServer = {"username": "", "old_password": "", "new_password": ""}
+    const initialCurrentServer = {"username": "", "old_password": "", "updated_password": ""}
     const initialNewCustomer = {"new_fname": "", "new_lname": "", "new_username": "", "new_password": "", "new_role": "customer"}
 
     const [cart,setCart] = useState([])
@@ -322,7 +322,7 @@ const Home = () => {
                         <div className="mt-[20px]">
                             <Input id="username" label="Username" handleInputChange={handleChangeCurrentServer} value={currentServer.username}/>
                             <Input id="old_password" type="password" label="Old Password" handleInputChange={handleChangeCurrentServer} value={currentServer.old_password}/>
-                            <Input id="new_password" type="password" label="New Password" handleInputChange={handleChangeCurrentServer} value={currentServer.new_password}/>
+                            <Input id="updated_password" type="password" label="New Password" handleInputChange={handleChangeCurrentServer} value={currentServer.updated_password}/>
                         </div>
                     </Panel>
                     <Panel className="h-[48%]" title="Register New Customer">
