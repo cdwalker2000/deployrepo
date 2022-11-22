@@ -5,33 +5,9 @@ import { HiOutlineVolumeUp } from 'react-icons/hi'
 // import NavBar from '../components/NavBar'
 // import { useCustomContext } from '../Context/Provider'
 // import menu from '../assets/menu.webp'
+import Dish from '../components/Dish'
 import Ingredient from '../components/Ingredient'
 import CartItem from '../components/CartItem'
-
-//Order items
-const OrderItem = ({price,name}) => {
-    const baseClasses = 'flex rounded-[7px] justify-between shadow-md h-[50px] bg-gray-50 mb-[7px] transition-all hover:bg-gray-200 items-center px-[20px]'
-    return (
-        <div className={baseClasses}>
-            <span>{name}</span>
-            <span>{price}</span>
-        </div>
-    )
-}
-
-// protein buttons
-const ProteinItem = ({name}) => {
-    // const baseClasses = 'flex rounded-[7px] justify-between shadow-md h-[50px] bg-gray-50 mb-[7px] transition-all hover:bg-gray-200 items-center px-[20px]'
-    return (
-        // <div className={baseClasses}>
-        //     <span>{name}</span>
-        //     <span>{price}</span>
-        // </div>
-        <form>
-            <input type="submit">{name}</input>
-        </form>
-    )
-}
 
 
 
@@ -52,6 +28,8 @@ const Home = () => {
     const initialCurrentDish = {"dish_name": "_", "protein_name": "_", "ingr1_name": "_", "ingr2_name": "_", "ingr3_name": "_", "ingr4_name": "_", "sauce_name": "_", "have_drink": -1, "total_cost": -1.11}
 
     const [cart,setCart] = useState([])
+    const [mains,setMains] = useState([])
+    const [starters,setStarters] = useState([])
     const [proteins,setProteins] = useState([])
     const [toppings,setToppings] = useState([])
     const [sauces,setSauces] = useState([])
@@ -62,6 +40,8 @@ const Home = () => {
 
     useEffect(() => {
         fetchCart();
+        fetchMains();
+        fetchStarters();
         fetchProteins();
         fetchToppings();
         fetchSauces();
@@ -72,6 +52,22 @@ const Home = () => {
         result
             .json()
             .then(result => setCart(result))
+            .catch(e => console.log(e))
+    }
+
+    const fetchMains = async () => {
+        const result = await fetch(`http://localhost:8080/mains`)      // change to final deployment site
+        result
+            .json()
+            .then(result => setMains(result))
+            .catch(e => console.log(e))
+    }
+
+    const fetchStarters = async () => {
+        const result = await fetch(`http://localhost:8080/starters`)      // change to final deployment site
+        result
+            .json()
+            .then(result => setStarters(result))
             .catch(e => console.log(e))
     }
 
@@ -108,6 +104,29 @@ const Home = () => {
         // setNewUser({ ...newUser, [id]: value })
     }
 
+    const addMain = (item) => {
+        console.log("dish_name, dish_price");
+        setCurrentDish({ ...currentDish, ["dish_name"]: item.dish_name, ["total_cost"]: item.dish_price });
+    }
+
+    const addStarter = (item) => {
+        // BLOCK ANY INGREDIENTS --> NEED TO IMMEDIATELY ADD THE DISH INSTEAD OF CLICKING ANY TOPPINGS
+        // ALSO CREATE NEW COMPONENT WITHOUT ANY CHILDREN, JUST THE NAME OF THE DISH AND THE PRICE
+        console.log("dish_name, dish_price");
+        setCurrentDish({ ...currentDish, ["dish_name"]: item.dish_name, ["total_cost"]: item.dish_price });
+    }
+
+    // const getDishType = async (item) => {
+    //     let type = "";
+    //     const response = await fetch(`http://localhost:8080/dish_type/${item.dish_id}`)
+    //     response
+    //         .json()
+    //         .then(result => type = result.dish_type)
+    //         .catch(e => console.log(e))
+    //     console.log(type);
+    //     return type;
+    // }
+
     const addIngredient = (item, category) => {
         let colname = "";
         let canAddIngredient = true;
@@ -126,7 +145,6 @@ const Home = () => {
         if (category == "sauce") {
             colname = "sauce_name";
         }
-        
         if (canAddIngredient) {
             console.log(colname);
             setCurrentDish({ ...currentDish, [colname]: item.ingredient_name });
@@ -136,10 +154,23 @@ const Home = () => {
         }
     }
 
+    const deleteLastDish = async (event) => {
+        console.log("deleteLastDish sends request");
+
+        const response = await fetch('http://localhost:8080/delete_last_dish', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        console.log("deleteLastDish got response");
+        fetchCart();
+    }
+
     const addDishToCart = async (event) => {
         event.preventDefault()
         
-        console.log("addDishToCart sends response");
+        console.log("addDishToCart sends request");
         
         const response = await fetch('http://localhost:8080/add_dish', {
             method: 'POST',
@@ -150,16 +181,14 @@ const Home = () => {
         })
         console.log("addDishToCart got response");
         console.log(response)
-        // response
-        //   .json()
-        //   .then(result => set(result))
-        //   .catch(e => console.log(e))
         fetchCart();
         setCurrentDish(initialCurrentDish);
         setIngrCount(0);
     }
 
     const cancelOrder = async (event) => {
+        // GO BACK TO LOGIN SCREEN ???
+
         event.preventDefault()
         
         console.log("clearCart sends response");
@@ -173,10 +202,6 @@ const Home = () => {
         })
         console.log("clearCart got response");
         console.log(response)
-        // response
-        //   .json()
-        //   .then(result => set(result))
-        //   .catch(e => console.log(e))
         fetchCart();
         setCurrentDish(initialCurrentDish);
         setIngrCount(0);
@@ -197,35 +222,6 @@ const Home = () => {
     //   }
 
     
-    //   const protein = ["vegetable medley", "chicken", "gyro", "meatballs", "falafel"]
-    //   const toppings = ["pickled onions", "diced cucumbers", "citrus couscous", "roasted cauliflower", "tomato-onion salad", "kalamata olives", "roasted peppers", "red cabbage slaw"]
-    //   const sauces = ["hummus", "red pepper hummus", "jalapeno feta", "tzatziki", "greek vinaigrette", "harissa"]
-      // checkOrder data
-    //   const menuList = [
-    //       {
-    //           name: 'pita',
-    //           children: ["falafel", "diced cucumbers", "tomato-onion salad", "roasted cauliflower", "roasted peppers", "tzatziki", "No Drink",],
-    //           price: 7.69
-    //       },
-    //       {
-    //           name: 'salad',
-    //           children: ["falafel", "diced cucumbers", "tomato-onion salad", "roasted cauliflower", "roasted peppers", "tzatziki", "No Drink",],
-    //           price: 7.69
-    //       }
-    //   ]
-      const mainList =
-          [
-              { name: "grain bowl", price: '7.79' },
-              { name: "salad", price: '7.69' },
-              { name: "greens and grains", price: '7.69' },
-              { name: "combo with drink", price: '8.99' },
-              { name: "combo with fries and drink", price: '8.99' },
-              { name: "pita", price: '7.69' }
-          ]
-    const starterList =
-    [
-        { name: "hummus", price: '3.79' }
-    ]
     //   const { user, handleChange } = useCustomContext();
     const user = {firstName: "", lastName: ""}
       // order list
@@ -271,7 +267,7 @@ const Home = () => {
                     </div>
                     <div className="min-h-[60px] items-center flex w-full">
                         <Button onClick={cancelOrder} className="mx-[5px]">Cancel</Button>
-                        <Button className="mx-[5px]">Delete Last Dish</Button>
+                        <Button onClick={deleteLastDish} className="mx-[5px]">Delete Last Dish</Button>
                         <Button onClick={addDishToCart} className="mx-[5px]">Add Dish</Button>
                         <Button className="mx-[5px]">Confirm</Button>
                     </div>
@@ -305,25 +301,13 @@ const Home = () => {
             <div className="flex flex-col px-[50px] md:flex-row justify-between h-[800px] mt-[50px] pb-[50px] relative">
                 <div className={'w-[50%] mr-[20px] h-full flex flex-col justify-between'}>
                     <Panel className="h-[48%]" title="Main">
-                        {mainList.map((item, index) => (
-                            <div key={"main_" + item.name} className="flex items-center justify-between mb-[12px]">
-                                <div className="w-[50px] h-[50px] rounded-[4px] overflow-hidden">
-                                    {/* <img className="w-full h-full" src={menu} /> */}
-                                </div>
-                                <Button>{item.name}</Button>
-                                <span className="font-bold text-red-500">${item.price}</span>
-                            </div>
+                        {mains.map((item, index) => (
+                            <Dish key={"main_" + item.dish_name} dish_name={item.dish_name} dish_price={item.dish_price} onClick={() => addMain(item)} />
                         ))}
                     </Panel>
                     <Panel className="h-[48%]" title="Starter">
-                        {starterList.map((item, index) => (
-                            <div key={"starter_" + item.name} className="flex items-center justify-between mb-[12px]">
-                                <div className="w-[50px] h-[50px] rounded-[4px] overflow-hidden">
-                                    {/* <img className="w-full h-full" src={menu} /> */}
-                                </div>
-                                <Button>{item.name}</Button>
-                                <span className="font-bold text-red-500">${item.price}</span>
-                            </div>
+                        {starters.map((item, index) => (
+                            <Dish key={"starter_" + item.dish_name} dish_name={item.dish_name} dish_price={item.dish_price} onClick={() => addStarter(item)} />
                         ))}
                     </Panel>
                 </div>
@@ -331,13 +315,7 @@ const Home = () => {
                     <Panel className="h-[48%]" title="Protein">
                         {
                             proteins.map((item, index) => (
-                                <div key={"protein_" + item.ingredient_name} className="flex items-center justify-between mb-[12px]">
-                                    <div className="w-[50px] h-[50px] rounded-[4px] overflow-hidden">
-                                        {/* <img className="w-full h-full" src={menu} /> */}
-                                    </div>
-                                    {/* <Button >{item.ingredient_name}</Button> */}
-                                    <Ingredient label={item.ingredient_name} onClick={() => addIngredient(item, "protein")} />
-                                </div>
+                                <Ingredient key={"protein_" + item.ingredient_name} label={item.ingredient_name} onClick={() => addIngredient(item, "protein")} />
                             ))
                         }
                     </Panel>
@@ -345,26 +323,14 @@ const Home = () => {
                         <Panel className="w-[48%] h-full" title="Topings">
                             {
                                 toppings.map((item, index) => (
-                                    <div key={"topping_" + item.ingredient_name} className="flex items-center justify-between mb-[12px]">
-                                        <div className="w-[50px] h-[50px] rounded-[4px] overflow-hidden">
-                                            {/* <img className="w-full h-full" src={menu} /> */}
-                                        </div>
-                                    {/* <Button >{item.ingredient_name}</Button> */}
-                                    <Ingredient label={item.ingredient_name} onClick={() => addIngredient(item, "topping")} />
-                                    </div>
+                                    <Ingredient key={"topping_" + item.ingredient_name} label={item.ingredient_name} onClick={() => addIngredient(item, "topping")} />
                                 ))
                             }
                         </Panel>
                         <Panel className="w-[48%] h-full" title="Sauces">
                             {
                                 sauces.map((item, index) => (
-                                    <div key={"sauce_" + item.ingredient_name} className="flex items-center justify-between mb-[12px]">
-                                        <div className="w-[50px] h-[50px] rounded-[4px] overflow-hidden">
-                                            {/* <img className="w-full h-full" src={menu} /> */}
-                                        </div>
-                                        {/* <Button >{item.ingredient_name}</Button> */}
-                                        <Ingredient label={item.ingredient_name} onClick={() => addIngredient(item, "sauce")} />
-                                    </div>
+                                    <Ingredient key={"sauce_" + item.ingredient_name} label={item.ingredient_name} onClick={() => addIngredient(item, "sauce")} />
                                 ))
                             }
                         </Panel>

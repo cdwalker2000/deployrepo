@@ -81,6 +81,54 @@ const addDish = (request, response) => {
 
 //
 
+const deleteLastDish = (request, response) => {
+  pool.query('DELETE FROM cart WHERE cart_item_id = (SELECT cart_item_id FROM cart ORDER BY cart_item_id DESC LIMIT(1));', (error, result) => {
+    if (error) {
+      throw error
+    }
+    response.status(201).send(`Last cart item deleted`);
+  })
+}
+
+//
+
+const getMains = (request, response) => {
+  pool.query("SELECT * FROM dish WHERE dish_type = 'main';", (error, results) => {
+    if (error) {
+      throw error
+    }
+    console.log(results.rows)
+    response.status(200).json(results.rows)
+  })
+}
+
+//
+
+const getStarters = (request, response) => {
+  pool.query("SELECT * FROM dish WHERE dish_type = 'starter';", (error, results) => {
+    if (error) {
+      throw error
+    }
+    console.log(results.rows)
+    response.status(200).json(results.rows)
+  })
+}
+
+//
+
+const getDishType = (request, response) => {
+  const dish_id = parseInt(request.params.dish_id)
+  
+  pool.query('SELECT dish_name, dish_type FROM dish WHERE dish_id = $1', [dish_id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+//
+
 const getProteins = (request, response) => {
   pool.query("SELECT * FROM inventory WHERE category = 'protein';", (error, results) => {
     if (error) {
@@ -112,27 +160,20 @@ const getSauces = (request, response) => {
   })
 }
 
-//   The API will take a GET and POST request to the /users endpoint. In the POST request, we’ll be adding a new user. 
-//   In this function, we’re extracting the name and email properties from the request body, and INSERTing the values.
 
-  const createUser = (request, response) => {
-    const { username, password, fname, lname } = request.body
-  
-    console.log("Got here4");
-    console.log(username, password, fname, lname);
+// 
 
-    pool.query('INSERT INTO users (name, email, fname, lname, role) VALUES ($1, $2, $3, $4, $5)', [username, password, fname, lname, "customer"], (error, result) => {
-      if (error) {
-        throw error
-      }
-      
-      response.status(201).send(`User added with ID: ${result.insertId}`);
-      // troubleshoot this line of code further, not functioning correctly
-      
-    })
-    console.log("Got here5");
+const getSalesReport = (request, response) => {
+  const { s_start_date, s_end_date, e_start_date, c_category1, c_category2 } = request.body
 
-  }
+  pool.query("SELECT * FROM orders WHERE time BETWEEN $1 AND $2;", [s_start_date, s_end_date], (error, results) => {
+    if (error) {
+      throw error
+    } 
+    console.log(results.rows);
+    response.status(200).json(results.rows)
+  })
+}
 
 
   module.exports = {
@@ -140,8 +181,12 @@ const getSauces = (request, response) => {
     getCart,
     clearCart,
     addDish,
+    deleteLastDish,
+    getMains,
+    getStarters,
+    getDishType,
     getProteins,
     getToppings,
     getSauces,
-    createUser,
+    getSalesReport
   }
