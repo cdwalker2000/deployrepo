@@ -38,6 +38,7 @@ app.post('/new_user', db.addNewUser)
 app.post('/add_new_dish', db.addNewDish)
 app.post('/add_new_inventory', db.addNewInventory)
 app.post('/update_dish', db.updateDishPrice)
+app.post('/remove_dish', db.removeDish)
 app.post('/restock', db.addNewRestock)
 app.post('/update_inventory', db.updateInventoryStock)
 

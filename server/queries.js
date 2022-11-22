@@ -237,6 +237,21 @@ const updateDishPrice = (request, response) => {
   })
 }
 
+// Removes dish from dish table, but keeps ingredient in inventory (would keep it in inventory)
+
+const removeDish = (request, response) => {
+  const { dish_name, dish_price } = request.body
+
+  console.log(dish_name, dish_price);
+
+  pool.query("DELETE FROM dish WHERE dish_name = $1;", [dish_name], (error, result) => {
+    if (error) {
+      throw error
+    }
+    response.status(201).send(`Existing dish deleted`);
+  })
+}
+
 //
 
 const addNewInventory = (request, response) => {
@@ -327,6 +342,7 @@ const getRestockReport = (request, response) => {
     addNewDish,
     addNewInventory,
     updateDishPrice,
+    removeDish,
     addNewRestock,
     updateInventoryStock,
     getSalesReport,

@@ -178,6 +178,24 @@ const Manager = () => {
         console.log("updateDish gets response");
     }
 
+    const removeDish = async (event) => {
+        event.preventDefault();
+
+        console.log("removeDish sends request");
+        
+        await fetch(`http://localhost:8080/remove_dish`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dish),
+        });
+
+        setDish(initialDish);
+        
+        console.log("removeDish gets response");
+    }
+
     // const updateRestockTime = () => {
     //     setRestock({ ...restock, ["time"]: getDateTime() });
     // }
@@ -279,7 +297,7 @@ const Manager = () => {
                                 <Input id="dish_price" label="Price" handleInputChange={handleInputChangeDish} value={dish.dish_price} />
                             </div>
                             <div className="flex justify-between">
-                                <Button type="danger">Remove Dish</Button>
+                                <Button onClick={removeDish} type="danger">Remove Dish</Button>
                                 <Button onClick={updateDish} type="warning">Update Price</Button>
                                 <Button onClick={addDish}>Add Dish</Button>
                             </div>
