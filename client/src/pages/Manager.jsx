@@ -23,7 +23,7 @@ const Manager = () => {
     const [checkInventoryInput, setCheckInventoryInput] = useState(initialCheckInventoryInput)
     const [inventory, setInventory] = useState([])
 
-    const initialNewEmployee = {"new_fname": "", "new_lname": "", "new_username": "", "new_password": ""}
+    const initialNewEmployee = {"new_fname": "", "new_lname": "", "new_username": "", "new_password": "", "new_role": "server"}
     const [newEmployee, setNewEmployee] = useState(initialNewEmployee)
 
     const initialNewDish = {"new_dish_name": "", "new_dish_price": ""}
@@ -85,7 +85,7 @@ const Manager = () => {
 
         console.log("addEmployee sends request");
         
-        const response = await fetch(`http://localhost:8080/new_server`, {
+        const response = await fetch(`http://localhost:8080/new_user`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -26,8 +26,10 @@ const Home = () => {
     
     // const initialNewUserState = {"fname": "", "lname": "", "username": "", "password": "", "role": "customer"}
     const initialCurrentDish = {"dish_name": "_", "protein_name": "_", "ingr1_name": "_", "ingr2_name": "_", "ingr3_name": "_", "ingr4_name": "_", "sauce_name": "_", "have_drink": -1, "total_cost": -1.11}
+    const initialCurrentServer = {"username": "", "old_password": "", "new_password": ""}
 
     const [cart,setCart] = useState([])
+    const [currentServer,setCurrentServer] = useState(initialCurrentServer)
     const [mains,setMains] = useState([])
     const [starters,setStarters] = useState([])
     const [proteins,setProteins] = useState([])
@@ -95,13 +97,27 @@ const Home = () => {
             .catch(e => console.log(e))
     }
 
-    // const handleInputChange = event => {
-    //     const { id, value } = event.target
-    //     setNewUser({ ...newUser, [id]: value })
-    // }
-    const handleChange = event => {
+    const handleChangeCurrentServer = event => {
         const { id, value } = event.target
-        // setNewUser({ ...newUser, [id]: value })
+        setCurrentServer({ ...currentServer, [id]: value })
+    }
+
+    const changePassword = async(event) => {
+        event.preventDefault()
+
+        console.log("changePassword sent request");
+
+        const response = await fetch('http://localhost:8080/change_password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(currentServer),
+        })
+
+        setCurrentServer(initialCurrentServer);
+
+        console.log("changePassword got response");
     }
 
     const addMain = (item) => {
@@ -275,19 +291,19 @@ const Home = () => {
                 <div className={'w-[500px] h-full flex flex-col justify-between'}>
                     <Panel className="h-[48%]" title="User Settings">
                         <div className="flex justify-between">
-                            <Button>Change Password</Button>
+                            <Button onClick={changePassword}>Change Password</Button>
                             <Button type="danger">Log Off</Button>
                         </div>
                         <div className="mt-[20px]">
-                            <Input label="Username" />
-                            <Input type="password" label="Old Password" />
-                            <Input type="password" label="New Password" />
+                            <Input id="username" label="Username" handleInputChange={handleChangeCurrentServer} value={currentServer.username}/>
+                            <Input id="old_password" type="password" label="Old Password" handleInputChange={handleChangeCurrentServer} value={currentServer.old_password}/>
+                            <Input id="new_password" type="password" label="New Password" handleInputChange={handleChangeCurrentServer} value={currentServer.new_password}/>
                         </div>
                     </Panel>
                     <Panel className="h-[48%]" title="Register New Customer">
                         <div className="mt-[20px]">
-                            <Input value={user.firstName} onChange={e => handleChange(e.target.value, 'firstName')} label="First Name" />
-                            <Input value={user.lastName} onChange={e => handleChange(e.target.value, 'lastName')} label="Last Name" />
+                            {/* <Input value={user.firstName} handleInputChange={e => handleChange(e.target.value, 'firstName')} label="First Name" />
+                            <Input value={user.lastName} handleInputChange={e => handleChange(e.target.value, 'lastName')} label="Last Name" /> */}
                             <Input label="Username" />
                             <Input type="password" label="Password" />
                         </div>
@@ -320,7 +336,7 @@ const Home = () => {
                         }
                     </Panel>
                     <div className={'w-full h-[48%] mr-[20px] flex justify-between relative'}>
-                        <Panel className="w-[48%] h-full" title="Topings">
+                        <Panel className="w-[48%] h-full" title="Toppings">
                             {
                                 toppings.map((item, index) => (
                                     <Ingredient key={"topping_" + item.ingredient_name} label={item.ingredient_name} onClick={() => addIngredient(item, "topping")} />
