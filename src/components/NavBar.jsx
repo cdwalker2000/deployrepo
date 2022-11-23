@@ -4,7 +4,7 @@ import { useCustomContext } from '../Context/Provider'
 import { useNavigate } from 'react-router-dom'
 import Button from './Button'
 
-// profile
+// profile image
 const Avatar = ({uri}) => {
     return (
         <div className="w-[40px] overflow-hidden h-[40px] rounded-full">
@@ -13,10 +13,10 @@ const Avatar = ({uri}) => {
     )
 }
 
-// nav bar shows firt and last name
+// nav bar infomation
 const NavBar = () => {
     const navigate = useNavigate();
-    // user info
+    // user info include first and last name
     const [user,setUser] = useState({
         firstName: 'FirstName',
         lastName: 'LastName'

@@ -1,33 +1,38 @@
 import React,{useState} from 'react'
 import Input from '../components/Input'
-import { Button, Modal,Input as AInput } from 'antd';
+import { Modal,Input as AInput } from 'antd';
+import Button  from '../components/Button'
 import {UserOutlined,LockOutlined} from  '@ant-design/icons';
 import {HiOutlineVolumeUp} from 'react-icons/hi'
 import { useNavigate } from 'react-router-dom';
+import {useCustomContext} from '../Context/Provider'
 import logo from '../assets/logo.png'
 
 const Login = () => {
-    // visibility of the pop window
+    const { size,color } = useCustomContext();
+    // the visibility of the pop window
     const [visible,setVisible] = useState(false)
-    // initial username and password
+    // username and password variables
     const [user,setUser] = useState({
         username: '',
         password: ''
     })
 
-    // change the value for name
+    // change the value
     const handleChange = (v,name) => {
         setUser(prev => ({...prev,[name]: v}))
     }
 
-    // navigation
+    // navigate
     const navigate = useNavigate();
-    // back to home page
+    // go to landing page when called
     const toHome = () => {
         navigate('/')
     }
     return (
-        <div className="w-[100vw] relative h-[100vh] flex items-center justify-around bg-gray-200">
+        <div 
+        className="w-[100vw] relative h-[100vh] flex items-center justify-around bg-gray-200"
+        style={{color: color}}>
             <div className="absolute h-[70px] top-[60px] w-[70px] right-[50px] rounded-full flex items-center justify-around bg-blue-500 hover:opacity-50 shadow-md">
                     <HiOutlineVolumeUp size={30} color="white" />
                 </div>
@@ -52,18 +57,19 @@ const Login = () => {
                 <div className="flex items-center justify-between">
                     <Button onClick={toHome} type="danger">Cancel</Button>
                     <Button type="primary" onClick={() => setVisible(true)}>Sign Up</Button>
-                </div>
-                <div className="flex items-center mt-[20px]"><span>Login with</span> <span className="cursor-pointer text-red-500 ml-[10px]">Google</span></div>
+                </div> 
+                <div style={{fontSize: size}}
+                className="flex items-center mt-[20px]"><span>Login with</span> <span className="cursor-pointer text-red-500 ml-[10px]">Google</span></div>
             </div>
             <Modal onOk={() => setVisible(false)} onCancel={() => setVisible(false)} visible={visible} title="Register New Customer">
-                <div className="mt-[20px]">
+                <div className="mt-[20px] text-xl">
                     <Input label="First Name" />
                     <Input label="Last Name"/>
                     <Input label="Username" />
                     <Input type="password" label="Password" />
                 </div>
                 <div className="flex justify-between">
-                    <Button>Cancel</Button>
+                    <Button >Cancel</Button>
                     <Button type="danger">Register</Button>
                 </div>
             </Modal>

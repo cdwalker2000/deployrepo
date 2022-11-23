@@ -1,11 +1,11 @@
 import React,{useState} from 'react'
+import { HiEye,HiEyeOff } from 'react-icons/hi'
 
-
-// blocks take inputs from users
+// inputs class with functions
 const Input = (props) => {
-    const { label, value, onChange, type } = props;
+    const { label,value,onChange,type } = props;
     const [visible,setVisible] = useState(true);
-    // take the inputs, for type such if it is text, it will show the inputs
+    // get the type of input for later either showing the text or hidding the text for password
     const getType = () => {
         if(!type)
             return 'text'

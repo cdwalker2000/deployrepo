@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import menu from '../assets/menu.webp'
 
 
-// Order item
+// the order item
 const OrderItem = ({ price, name }) => {
     const baseClasses = 'flex rounded-[7px] justify-between shadow-md h-[50px] bg-gray-50 mb-[7px] transition-all hover:bg-gray-200 items-center px-[20px]'
     return (
@@ -19,7 +19,7 @@ const OrderItem = ({ price, name }) => {
     )
 }
 
-// Panels
+// panel
 const Panel = ({ children, title, className }) => {
     return (
         <div className={'bg-white overflow-auto rounded-[15px] shadow-lg p-[5px] md:p-[20px] ' + className}>
@@ -29,13 +29,14 @@ const Panel = ({ children, title, className }) => {
     )
 }
 
-// The temp home page
+// the page include display info
 const Home = () => {
     const navigate = useNavigate();
+    const { size,color } = useCustomContext();
     const protein = ["vegetable medley", "chicken", "gyro", "meatballs", "falafel"]
     const toppings = ["pickled onions", "diced cucumbers", "citrus couscous", "roasted cauliflower", "tomato-onion salad", "kalamata olives", "roasted peppers", "red cabbage slaw"]
     const sauces = ["hummus", "red pepper hummus", "jalapeno feta", "tzatziki", "greek vinaigrette", "harissa"]
-    // Current order list just for temp
+    // current order display for temp
     const menuList = [
         {
             name: 'pita',
@@ -48,6 +49,7 @@ const Home = () => {
             price: 7.69
         }
     ]
+    // main data list
     const mainList =
         [
             { name: "grain bowl", price: '7.79' },
@@ -58,22 +60,23 @@ const Home = () => {
             { name: "pita", price: '7.69' }
     ]
     const { user, handleChange } = useCustomContext();
-    // The test order, not useful much
+    // store order and price
     const [order, setOrder] = useState([
         { name: 'test order', price: '$100.8' },
     ])
 
-    // get the total of the order
+    // get the total
     const getTotal = () => {
         let sum = 0;
         sum = menuList.reduce((cur,item) => {
             return cur + item.price
         },0)
-        // return the sum with two digits
+        // keep two digits
         return sum.toFixed(2);
     }
-    // initial display, can be taken off
+    // initialize the order list, with the array, can be changed to array read from database
     const initMockList = () => {
+        // create order list with random price
         const mock = Array.from(new Array(20)).map((_, index) => ({ name: `order ${index}`, price: `$${Math.round(Math.random() * 50 + 10)}` }))
         setOrder(mock)
     }
@@ -81,13 +84,23 @@ const Home = () => {
         initMockList()
     }, [])
     return (
-        <>
+        <div style={{color: color,fontSize: size}}>
             <NavBar />
             <div className="flex flex-col md:flex-row h-[600px] relative mt-[90px] px-[50px]">
                 <div className="absolute h-[70px] w-[70px] right-[50px] top-[0px] rounded-full flex items-center justify-around bg-blue-500 hover:opacity-50 shadow-md">
                     <HiOutlineVolumeUp size={30} color="white" />
                 </div>
-                <Panel title="Current Order/Check out" className="mr-[25px] relative w-full md:w-[500px] h-full flex flex-col items-between">
+                { /*
+                buttons functions:
+                Cancel: delete everything in the cart which clear out the cart
+                Delete: delete the current item or current order only in the cart, for example there is already one order
+                in the cart and working on second order, Delete button will delete the second order keep the first order, 
+                more like delete the current row in cart on database
+                Add Order: add an order to the cart, more like create a new row in the cart in database
+                Confirm: confirm the order and which push everything in the cart, update the order history and inventory
+                then clear out the cart
+                */}
+                <Panel title="Current Order & Check Out" className="mr-[25px] relative w-full md:w-[500px] h-full flex flex-col items-between">
                     <div className="h-full px-[10px] overflow-auto">
                         {menuList.map((item, index) => (
                             <div className="mb-[20px]">
@@ -114,8 +127,8 @@ const Home = () => {
                         <Button className="mx-[5px]">Confirm</Button>
                     </div>
                 </Panel>
-                <div className={'w-[500px] h-full flex flex-col justify-between'}>
-                    <Panel className="h-[48%]" title="user settings">
+                <div className={'w-[800px] h-full flex flex-col justify-between'}>
+                    <Panel className="h-[48%]" title="User Settings">
                         <div className="flex justify-between">
                             <Button>Change Password</Button>
                             <Button type="danger">Log Off</Button>
@@ -207,7 +220,7 @@ const Home = () => {
                 </div>
                 <Button className="absolute bottom-0 right-0">View Order</Button>
             </div>
-        </>
+        </div>
     )
 }
 

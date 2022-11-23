@@ -1,24 +1,36 @@
 import React,{createContext,useState,useContext} from 'react'
+import { useNavigate } from 'react-router-dom';
 
-// Context is used to manage global state
+// the context used on pages
 const Context = createContext();
-// Export the context for use by the child components
+// take the context for customizing
 export const useCustomContext = () => useContext(Context)
 
+// create different colors and initial color and size
 const Provider = ({children}) => {
+    const colorList = ['black','blue','red','yellow','green','orange'];
+    const [size,setSize] = useState(14)
+    const [color,setColor] = useState('black')
     const [user,setUser] = useState({
         firstName: '',
         lastName: ''
     })
 
+    // change the value according to different variables
     const handleChange = (value,name) => {
         setUser(prev => ({...prev,[name]: value}))
     } 
 
+    // change font color and size, use in all pages
     return (
         <Context.Provider value={{
             user,
-            handleChange
+            handleChange,
+            setColor,
+            color,
+            colorList,
+            setSize,
+            size
         }}>{children}</Context.Provider>
     )
 }

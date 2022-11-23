@@ -1,9 +1,22 @@
-import React from 'react'
+import React,{useRef} from 'react'
+import { useCustomContext } from '../Context/Provider';
 
-// define the buttons
+// buttons class with functions
 const Button = (props) => {
-    const { children, round, className, type, block, onClick } = props;
-    // what kind of buttons we will have
+    // use the useRef hook to get the button dom instance
+    const cur = useRef();
+    // import property from context
+    const { size,color } = useCustomContext();
+    const { children,round,className,type,block,onClick } = props;
+    // mouse enter change size to the setting size
+    const onEnter = () => {
+        cur.current.style.fontSize = size + 'px'
+    }
+    // mouse leave change size to the initial size
+    const onLeave = () => {
+        cur.current.style.fontSize = '16px'
+    }
+    // color or style for buttons
     const baseClasses = () => {
         let extraClasses = '';
         switch(type) {
@@ -20,11 +33,14 @@ const Button = (props) => {
         if(block) {
             extraClasses += ' ' + 'w-full'
         }
-        return ' ' + 'px-[15px] h-[40px] text-white hover:opacity-75 shadow-lg leading-[40px] text-center bg-blue-500 cursor-pointer ' + extraClasses
+        return ' ' + 'text-[16px] px-[15px] h-[40px] text-white hover:opacity-75 shadow-lg leading-[40px] text-center bg-blue-500 cursor-pointer hover:scale-110 transition-all ' + extraClasses
     }
     return (
         <div 
+        ref={cur}
         onClick={onClick || (() => {})}
+        onMouseEnter={onEnter}
+        onMouseLeave={onLeave}
         className={`${round? 'rounded-full':'rounded-[4px]' + baseClasses() + ' ' + className } 
         `}>{children}</div>
     )
