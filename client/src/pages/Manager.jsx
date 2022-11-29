@@ -1,6 +1,9 @@
 import React,{ useState,useEffect } from 'react'
 import Button from '../components/Button'
 import Input from '../components/Input'
+import Inventory from '../components/Inventory'
+import Menu from '../components/Menu'
+import Report from '../components/Report'
 import { HiOutlineVolumeUp } from 'react-icons/hi'
 import {TiUser} from 'react-icons/ti'
 // import { addDish } from '../../../server/queries'
@@ -51,6 +54,10 @@ const Manager = () => {
     const [checkInventoryInput, setCheckInventoryInput] = useState(initialCheckInventoryInput)
     const [inventory, setInventory] = useState([])
 
+    const initialMenuSearchInput = {"menu_search_term": ""}
+    const [menuSearchInput, setMenuSearchInput] = useState(initialMenuSearchInput)
+    const [menu, setMenu] = useState([])
+
     const initialNewEmployee = {"new_fname": "", "new_lname": "", "new_username": "", "new_password": "", "new_role": "server"}
     const [newEmployee, setNewEmployee] = useState(initialNewEmployee)
 
@@ -72,6 +79,11 @@ const Manager = () => {
     const handleInputChangeCheckInventory = event => {
         const { id, value } = event.target
         setCheckInventoryInput({ ...checkInventoryInput, [id]: value })
+    }
+
+    const handleInputChangeMenuSearch = event => {
+        const { id, value } = event.target
+        setMenuSearchInput({ ...menuSearchInput, [id]: value })
     }
 
     const handleInputChangeNewEmployee = event => {
@@ -115,6 +127,26 @@ const Manager = () => {
             .catch(e => console.log(e))
         
         console.log("getInventory gets response");
+    }
+
+    const getMenu = async (event) => {
+        event.preventDefault();
+
+        console.log("getMenu sends request");
+        
+        const response = await fetch(`http://localhost:8080/menu`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(menuSearchInput),
+        });
+        response
+            .json()
+            .then(response => setMenu(response))
+            .catch(e => console.log(e))
+        
+        console.log("getMenu gets response");
     }
 
     const addEmployee = async (event) => {
@@ -232,6 +264,14 @@ const Manager = () => {
         event.preventDefault();
 
         console.log("getSalesReport sends request");
+
+        if (reportInputs.s_start_date == "") {
+            reportInputs.s_start_date = "2022-09-11 00:00:00";
+        }
+
+        if (reportInputs.s_end_date == "") {
+            reportInputs.s_end_date = getDateTime();
+        }
         
         const response = await fetch(`http://localhost:8080/sales_report`, {
             method: 'POST',
@@ -244,6 +284,8 @@ const Manager = () => {
             .json()
             .then(response => setSalesReport(response))
             .catch(e => console.log(e))
+
+        
 
         console.log("getSalesReport gets response");
     }
@@ -260,6 +302,161 @@ const Manager = () => {
         console.log("getRestockReport gets response");
     }
 
+    const getExcessReport = async (event) => {
+        console.log("getExcessReport sends requests");        
+
+        const response = await fetch(`http://localhost:8080/ingredients`)
+        response
+            .json()
+            .then(response => processIngredients(response))
+            .catch(e => console.log(e))
+        
+        console.log("getExcessReport gets responses");
+    }
+
+    const processIngredients = (ingredients) => {
+        ingredients.forEach(ingredient => {
+            if (ingredient.category == 'topping' || ingredient.category == 'protein' || ingredient.category == 'sauce') {
+                getSales(ingredient);
+            }
+        });
+    }
+
+    const getSales = async (ingredient) => {
+        if (ingredient.category == "topping") {
+            getSales1(ingredient);
+        }
+
+        if (ingredient.category == 'protein') {
+            const response = await fetch(`http://localhost:8080/sales_protein`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(ingredient),
+            });
+            response
+                .json()
+                .then((response) => compareSalesStock(response[0].count, ingredient))
+                .catch(e => console.log(e))
+        }
+
+        if (ingredient.category == 'sauce') {
+            const response = await fetch(`http://localhost:8080/sales_sauce`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(ingredient),
+            });
+            response
+                .json()
+                .then((response) => compareSalesStock(response[0].count, ingredient))
+                .catch(e => console.log(e))
+        }
+    }
+
+    //
+
+    const getSales1 = async (ingredient) => {
+        const response = await fetch(`http://localhost:8080/sales_ingr1`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(ingredient),
+        });
+        response
+            .json()
+            .then((response) => getSales2(response[0].count, ingredient))
+            .catch(e => console.log(e))
+    }
+
+    //
+
+    const getSales2 = async (sales, ingredient) => {
+        const response = await fetch(`http://localhost:8080/sales_ingr2`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(ingredient),
+        });
+        response
+            .json()
+            .then((response) => getSales3(sales + response[0].count, ingredient))
+            .catch(e => console.log(e))
+    }
+
+    //
+
+    const getSales3 = async (sales, ingredient) => {
+        const response = await fetch(`http://localhost:8080/sales_ingr3`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(ingredient),
+        });
+        response
+            .json()
+            .then((response) => getSales4(sales + response[0].count, ingredient))
+            .catch(e => console.log(e))
+    }
+
+    //
+
+    const getSales4 = async (sales, ingredient) => {
+        const response = await fetch(`http://localhost:8080/sales_ingr4`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(ingredient),
+        });
+        response
+            .json()
+            .then((response) => compareSalesStock(sales + response[0].count, ingredient))
+            .catch(e => console.log(e))
+    }
+
+    // currStock = initialStock - sales + restocks
+    // initialStock = currStock + sales - restocks 
+
+    const compareSalesStock = async (sales, ingredient) => {
+        ingredient.start_date = reportInputs.e_start_date;
+        
+        const response = await fetch(`http://localhost:8080/stock_at_start`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(ingredient),
+        });
+        
+        response
+            .json()
+            .then((response => isExcess(response[0].sum, sales, ingredient)))
+    }
+
+    const isExcess = (restocks, sales, ingredient) => {
+        let initialStock = 0
+        if (restocks === null) {
+            initialStock = ingredient.stock + sales;
+        }
+        else {
+            initialStock = ingredient.stock + sales - restocks;
+        }
+        
+        if (sales < 0.10 * initialStock) {
+            console.log(ingredient.ingredient_name + " " + initialStock)
+            let percent = sales / initialStock * 100;
+            console.log("Sold " + percent.toFixed(3) + "%")
+            ingredient.sold = percent.toFixed(3) + "%"
+            excessReport.push(ingredient)
+            setExcessReport([...excessReport])
+        }
+    }
     
 
     return (
@@ -272,10 +469,23 @@ const Manager = () => {
                     <TiUser style={{fontSize: '50px'}}/> <h1>Manager Name</h1>
                 </div> */}
                 <Panel title="Check Inventory" className="mr-[25px] relative w-full md:w-[500px] h-full flex flex-col items-between">
+                    <div>    
                         <div className="min-h-[60px] items-center flex w-full">
                             <Input id="check_ingredient_name" label="Item Name" handleInputChange={handleInputChangeCheckInventory} value={checkInventoryInput.check_ingredient_name}/>
                         </div>
                         <Button onClick={getInventory} className="mx-[5px]">Search</Button>
+                    </div>
+                    <Inventory data={inventory}/>
+                </Panel>
+
+                <Panel title="Menu" className="mr-[25px] relative w-full md:w-[500px] h-full flex flex-col items-between">
+                    <div>    
+                        <div className="min-h-[60px] items-center flex w-full">
+                            <Input id="menu_search_term" label="Dish Name" handleInputChange={handleInputChangeMenuSearch} value={menuSearchInput.menu_search_term}/>
+                        </div>
+                        <Button onClick={getMenu} className="mx-[5px]">Search</Button>
+                    </div>
+                    <Menu data={menu}/>
                 </Panel>
                 
                 <div className={'w-[500px] h-full flex flex-col justify-between'}>
@@ -316,8 +526,8 @@ const Manager = () => {
             </div>
             <div className="flex flex-col md:flex-row justify-between h-[600px] mt-[50px] pb-[0px] relative">
                 <div className={'w-[50%] mr-[20px] h-full flex flex-col justify-between'}>
-                        <Panel className="h-[48%]" title="Restock Orders">
-                            <div>
+                    <Panel className="h-[48%]" title="Restock Orders">
+                        <div>
                             <div className="mt-[20px]">
                                 <Input id="ingredient_name" label="Ingredient Name" handleInputChange={handleInputChangeRestock} value={restock.ingredient_name}/>
                                 <Input id="num_servings" label="Quantity (servings)" handleInputChange={handleInputChangeRestock} value={restock.num_servings}/>
@@ -325,40 +535,43 @@ const Manager = () => {
                                 <Input id="seller_name" label="Seller" handleInputChange={handleInputChangeRestock} value={restock.seller_name}/>
                                 <Input id="time" label="Datetime Received" handleInputChange={handleInputChangeRestock} value={restock.time}/>
                             </div>
-                                <Button onClick={addRestockOrder}>Record Restock Order</Button>
-                            </div>
-                        </Panel>
+                            <Button onClick={addRestockOrder}>Record Restock Order</Button>
+                        </div>
+                    </Panel>
                 </div>
                 <div className={'w-[50%] h-full flex flex-col justify-between'}>
-                        <Panel className="h-[48%]" title="Sales Report">
+                    <Panel className="h-[48%]" title="Sales Report">
                         <div>
                             <div className="mt-[20px]">
                                 <Input id="s_start_date" label="Start Date" handleInputChange={handleInputChangeReports} value={reportInputs.s_start_date}/>
                                 <Input id="s_end_date" label="End Date" handleInputChange={handleInputChangeReports} value={reportInputs.s_end_date}/>
                             </div>
                             <Button onClick={getSalesReport}>Generate Sales Report</Button>
-                        </div>  
-                        </Panel>
+                        </div>
+                        <Report data={salesReport} type="sales" />
+                    </Panel>
                 </div>
                 <div className={'w-[50%] ml-[20px] h-full flex flex-col justify-between'}>
-                        <Panel className="h-[48%]" title="Excess Inventory Report">
+                    <Panel className="h-[48%]" title="Excess Inventory Report">
                         <div>
                             <div className="mt-[20px]">
-                                <Input label="Input Type of Dish"/>
+                                <Input id="e_start_date" label="Input Type of Dish" handleInputChange={handleInputChangeReports} value={reportInputs.e_start_date}/>
                             </div>
-                                <Button>Generate Excess Report</Button>
-                            </div>
-                        </Panel>
+                            <Button onClick={getExcessReport}>Generate Excess Report</Button>
+                        </div>
+                        <Report data={excessReport} type="excess" />  
+                    </Panel>
                 </div>
             </div>
 
             <div className="flex flex-col md:flex-row justify-between h-[800px] mt-[0px] pb-[0px] relative">
                 <div className={'w-[50%] h-full flex flex-col justify-between'}>
-                        <Panel className="h-[48%]" title="Restock Report">
+                    <Panel className="h-[48%]" title="Restock Report">
                         <div>
                             <Button onClick={getRestockReport}>Generate Restock Report</Button>
                         </div>
-                        </Panel>
+                        <Report data={restockReport} type="restock" />  
+                    </Panel>
                 </div>
                 <Button className="absolute bottom-0 right-0">Accessibility</Button>
             </div>

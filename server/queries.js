@@ -2,7 +2,6 @@
 
 // const pool = db.pool;
 
-
 require('dotenv').config()
 
 const Pool = require('pg').Pool;
@@ -192,6 +191,20 @@ const getInventory = (request, response) => {
 
 //
 
+const getMenu = (request, response) => {
+  const { menu_search_term } = request.body
+  let query = "SELECT * FROM dish WHERE dish_name LIKE '%" + menu_search_term + "%';";
+
+  pool.query(query, (error, results) => {
+    if (error) {
+      throw error
+    } 
+    response.status(200).json(results.rows)
+  })
+}
+
+//
+
 const addNewUser = (request, response) => {
   const { new_fname, new_lname, new_username, new_password, new_role} = request.body
 
@@ -259,7 +272,7 @@ const addNewInventory = (request, response) => {
   
   console.log(dish_name, dish_price);
 
-  pool.query("INSERT INTO inventory (ingredient_name, stock, restock, location, category) VALUES ($1, $2, $3, $4, $5);", [dish_name, 0, 1000, "fridge", "starter"], (error, result) => {
+  pool.query("INSERT INTO inventory (ingredient_name, stock, restock, location, category) VALUES ($1, $2, $3, $4, $5);", [dish_name, 0, 1000, "fridge", "topping"], (error, result) => {
     if (error) {
       throw error
     }
@@ -311,6 +324,17 @@ const getSalesReport = (request, response) => {
   })
 }
 
+const dishName = (request, response) => {
+  const { dish_id } = request.body
+  
+  pool.query("SELECT dish_name FROM dish WHERE dish_id = $1;", [dish_id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)[0].dish_name
+  })
+}
+
 // 
 
 const getRestockReport = (request, response) => {
@@ -319,6 +343,96 @@ const getRestockReport = (request, response) => {
       throw error
     } 
     console.log(results.rows);
+    response.status(200).json(results.rows)
+  })
+}
+
+// 
+
+const excessIngredients = (request, response) => {
+  pool.query("SELECT ingredient_name, category, stock FROM inventory;", (error, results) => {
+    if (error) {
+      throw error
+    } 
+    response.status(200).json(results.rows)
+  })
+}
+
+const excessSalesProtein = (request, response) => {
+  const { ingredient_name, category, stock } = request.body
+
+  pool.query("SELECT COUNT(*) FROM orders WHERE protein_name = $1;", [ingredient_name], (error, results) => {
+    if (error) {
+      throw error
+    } 
+    response.status(200).json(results.rows)
+  })
+}
+
+const excessSalesSauce = (request, response) => {
+  const { ingredient_name, category, stock } = request.body
+
+  pool.query("SELECT COUNT(*) FROM orders WHERE sauce_name = $1;", [ingredient_name], (error, results) => {
+    if (error) {
+      throw error
+    } 
+    response.status(200).json(results.rows)
+  })
+}
+
+const excessSalesIngr1 = (request, response) => {
+  const { ingredient_name, category, stock } = request.body
+
+  pool.query("SELECT COUNT(*) FROM orders WHERE ingr1_name = $1;", [ingredient_name], (error, results) => {
+    if (error) {
+      throw error
+    } 
+    response.status(200).json(results.rows)
+  })
+}
+
+const excessSalesIngr2 = (request, response) => {
+  const { ingredient_name, category, stock } = request.body
+
+  pool.query("SELECT COUNT(*) FROM orders WHERE ingr2_name = $1;", [ingredient_name], (error, results) => {
+    if (error) {
+      throw error
+    } 
+    response.status(200).json(results.rows)
+  })
+}
+
+const excessSalesIngr3 = (request, response) => {
+  const { ingredient_name, category, stock } = request.body
+
+  pool.query("SELECT COUNT(*) FROM orders WHERE ingr3_name = $1;", [ingredient_name], (error, results) => {
+    if (error) {
+      throw error
+    } 
+    response.status(200).json(results.rows)
+  })
+}
+
+const excessSalesIngr4 = (request, response) => {
+  const { ingredient_name, category, stock } = request.body
+
+  pool.query("SELECT COUNT(*) FROM orders WHERE ingr4_name = $1;", [ingredient_name], (error, results) => {
+    if (error) {
+      throw error
+    } 
+    response.status(200).json(results.rows)
+  })
+}
+
+
+
+const restocks = (request, response) => {
+  const { ingredient_name, category, stock, start_date } = request.body
+
+  pool.query("SELECT SUM(num_servings) FROM restock WHERE ingredient_name = $1 AND time > $2;", [ingredient_name, start_date], (error, results) => {
+    if (error) {
+      throw error
+    }
     response.status(200).json(results.rows)
   })
 }
@@ -345,6 +459,16 @@ const getRestockReport = (request, response) => {
     removeDish,
     addNewRestock,
     updateInventoryStock,
+    getMenu,
     getSalesReport,
+    dishName, 
     getRestockReport,
+    excessIngredients,
+    excessSalesProtein,
+    excessSalesSauce,
+    excessSalesIngr1,
+    excessSalesIngr2,
+    excessSalesIngr3,
+    excessSalesIngr4,
+    restocks,
   }
