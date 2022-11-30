@@ -67,13 +67,15 @@ const Manager = () => {
     const initialRestock = {"time": "", "ingredient_name": "", "seller_name": "", "cost": "", "num_servings": ""}
     const [restock, setRestock] = useState(initialRestock)
 
+    const initialReportsInputs = {"s_start_date": "", "s_end_date": "", "e_start_date": "_", "c_category1": "_", "c_category2": "_"}
+    const [reportInputs, setReportsInputs] = useState(initialReportsInputs)
+
     const [salesReport, setSalesReport] = useState([])
     const [excessReport, setExcessReport] = useState([])
     const [restockReport, setRestockReport] = useState([])
     const [comboReport, setComboReport] = useState([])
 
-    const initialReportsInputs = {"s_start_date": "", "s_end_date": "", "e_start_date": "_", "c_category1": "_", "c_category2": "_"}
-    const [reportInputs, setReportsInputs] = useState(initialReportsInputs)
+    
 
     
     const handleInputChangeCheckInventory = event => {
@@ -105,6 +107,7 @@ const Manager = () => {
     const handleInputChangeReports = event => {
         const { id, value } = event.target
         setReportsInputs({ ...reportInputs, [id]: value })
+        console.log(reportInputs)
     }
 
     
@@ -457,6 +460,31 @@ const Manager = () => {
             setExcessReport([...excessReport])
         }
     }
+
+    //
+
+    const getBestSellingComboReport = async (event) => {
+        
+        let condition1 = makeCondition(reportInputs.c_category1)
+    }
+
+    const makeCondition = (category) => {
+        if (category == "protein") {
+            return "protein_name = $1"
+        }
+        if (category == "protein") {
+            return "protein_name = $1"
+        }
+        if (category == "sauce") {
+            return "sauce_name = $1"
+        }
+    }
+
+    const categories = [
+        { name: "protein" },
+        { name: "topping" },
+        { name: "sauce" },
+    ]
     
 
     return (
@@ -574,6 +602,50 @@ const Manager = () => {
                     </Panel>
                 </div>
                 <Button className="absolute bottom-0 right-0">Accessibility</Button>
+            </div>
+
+            <div className="flex flex-col md:flex-row justify-between h-[700px] mt-[0px] pb-[0px] relative">
+                <div className={'w-[50%] mr-[20px] h-full flex flex-col justify-between'}>
+
+                    <Panel className="h-[48%]" title="Best Combo Report">
+                        {/* Displaying the value of protein */}
+                        {/* {category} */}
+                        <br />
+
+                        {/* Creating our dropdown and passing it the handleInputChangeReports 
+                        so that every time a new choice is selected, our report inputs state updates.
+                        */}
+                        <select id="c_category1" onChange={handleInputChangeReports} value={reportInputs.c_category1}> 
+                            <option defaultValue={"-- Select a Category --"}>-- Select a Category --</option>
+                                    {/* Mapping through each fruit object in our fruits array
+                                and returning an option element with the appropriate attributes / values.
+                                */}
+                            {categories.map((category) => <option key={category.name} value={category.name}>{category.name}</option>)}
+                        </select>
+
+                        <br />
+                        <br />
+                        <br />
+
+                        {/* Creating our dropdown and passing it the handleInputChangeReports 
+                        so that every time a new choice is selected, our report inputs state updates.
+                        */}
+                        <select id="c_category2" onChange={handleInputChangeReports} value={reportInputs.c_category2}> 
+                            <option defaultValue={"-- Select a Category --"}>-- Select a Category --</option>
+                                    {/* Mapping through each fruit object in our fruits array
+                                and returning an option element with the appropriate attributes / values.
+                                */}
+                            {categories.map((category) => <option key={category.name} value={category.name}>{category.name}</option>)}
+                        </select>
+                        
+                        <br />
+                        <br />
+                        <br />
+                        
+                        <Button onClick = {getBestSellingComboReport}>Generate Best Sellers Report</Button>
+                            
+                    </Panel>
+                </div>
             </div>
         </>
     )
