@@ -18,6 +18,8 @@ app.get('/', (request, response) => {
   response.json({ info: 'Node.js, Express, and Postgres API' })
 })
 
+// Server
+
 app.post('/change_password', db.changePassword)
 
 app.get('/cart', db.getCart)
@@ -43,9 +45,13 @@ app.post('/restock', db.addNewRestock)
 app.post('/update_inventory', db.updateInventoryStock)
 app.post('/menu', db.getMenu)
 
+// Manager
+
 app.post('/sales_report', db.getSalesReport)
 app.post('/dish_name', db.dishName)
+
 app.get('/restock_report', db.getRestockReport)
+
 app.get('/ingredients', db.excessIngredients)
 app.post('/sales_protein', db.excessSalesProtein)
 app.post('/sales_sauce', db.excessSalesSauce)
@@ -53,11 +59,11 @@ app.post('/sales_ingr1', db.excessSalesIngr1)
 app.post('/sales_ingr2', db.excessSalesIngr2)
 app.post('/sales_ingr3', db.excessSalesIngr3)
 app.post('/sales_ingr4', db.excessSalesIngr4)
-app.post('/stock_at_start', db.excessRestocks)
+app.post('/restocks_after', db.excessRestocks)
+
 app.post('/combo_sales', db.bestComboSales)
 
 
-// app.get
 
 app.listen(port, () => {
   console.log(`App running on port ${port}.`)

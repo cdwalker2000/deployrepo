@@ -313,7 +313,7 @@ const updateInventoryStock = (request, response) => {
 // 
 
 const getSalesReport = (request, response) => {
-  const { s_start_date, s_end_date, e_start_date, c_category1, c_category2 } = request.body
+  const { s_start_date, s_end_date } = request.body
 
   pool.query("SELECT * FROM orders WHERE time BETWEEN $1 AND $2;", [s_start_date, s_end_date], (error, results) => {
     if (error) {
@@ -358,6 +358,8 @@ const excessIngredients = (request, response) => {
   })
 }
 
+//
+
 const excessSalesProtein = (request, response) => {
   const { ingredient_name, category, stock } = request.body
 
@@ -368,6 +370,8 @@ const excessSalesProtein = (request, response) => {
     response.status(200).json(results.rows)
   })
 }
+
+//
 
 const excessSalesSauce = (request, response) => {
   const { ingredient_name, category, stock } = request.body
@@ -380,6 +384,8 @@ const excessSalesSauce = (request, response) => {
   })
 }
 
+//
+
 const excessSalesIngr1 = (request, response) => {
   const { ingredient_name, category, stock } = request.body
 
@@ -390,6 +396,8 @@ const excessSalesIngr1 = (request, response) => {
     response.status(200).json(results.rows)
   })
 }
+
+//
 
 const excessSalesIngr2 = (request, response) => {
   const { ingredient_name, category, stock } = request.body
@@ -402,6 +410,8 @@ const excessSalesIngr2 = (request, response) => {
   })
 }
 
+//
+
 const excessSalesIngr3 = (request, response) => {
   const { ingredient_name, category, stock } = request.body
 
@@ -412,6 +422,8 @@ const excessSalesIngr3 = (request, response) => {
     response.status(200).json(results.rows)
   })
 }
+
+//
 
 const excessSalesIngr4 = (request, response) => {
   const { ingredient_name, category, stock } = request.body
@@ -424,7 +436,7 @@ const excessSalesIngr4 = (request, response) => {
   })
 }
 
-
+//
 
 const excessRestocks = (request, response) => {
   const { ingredient_name, category, stock, start_date } = request.body
@@ -436,6 +448,8 @@ const excessRestocks = (request, response) => {
     response.status(200).json(results.rows)
   })
 }
+
+//
 
 const bestComboSales = (request, response) => {
   const { c1Condition, c2Condition } = request.body
