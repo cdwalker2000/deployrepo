@@ -1,10 +1,27 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Panel from './Panel'
 import Dish from './Dish'
 
 // Panels
 const Starters = (props) => {
-    const { starters, currentDish, setCurrentDish } = props
+    const { currentDish, setCurrentDish } = props
+
+
+    const [starters, setStarters] = useState([])
+
+    useEffect(() => {
+        fetchStarters();
+    }, [])
+
+    const fetchStarters = async () => {
+        const result = await fetch(`http://localhost:8080/starters`)      // change to final deployment site
+        result
+            .json()
+            .then(result => setStarters(result))
+            .catch(e => console.log(e))
+    }
+
+    
 
     const addStarter = (item) => {
         // BLOCK ANY INGREDIENTS --> NEED TO IMMEDIATELY ADD THE DISH INSTEAD OF CLICKING ANY TOPPINGS

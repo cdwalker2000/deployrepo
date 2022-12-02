@@ -1,11 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Panel from './Panel'
 import Button from './Button'
 import Input from './Input'
 
 // Panels
-const ChangePassword = (props) => {
-    const { currentServer, setCurrentServer, initialCurrentServer, handleChangeCurrentServer } = props
+const ChangePassword = () => {
+    const initialCurrentServer = {"username": "", "old_password": "", "updated_password": ""}
+    const [currentServer,setCurrentServer] = useState(initialCurrentServer)
+
+    const handleChangeCurrentServer = event => {
+        const { id, value } = event.target
+        setCurrentServer({ ...currentServer, [id]: value })
+    }
 
     const changePassword = async(event) => {
         event.preventDefault()

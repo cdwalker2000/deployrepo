@@ -1,10 +1,24 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Panel from './Panel'
 import Dish from './Dish'
 
 // Panels
 const Mains = (props) => {
-    const { mains, currentDish, setCurrentDish } = props
+    const { currentDish, setCurrentDish } = props
+
+    const [mains,setMains] = useState([])
+
+    useEffect(() => {
+        fetchMains();
+    }, [])
+
+    const fetchMains = async () => {
+        const result = await fetch(`http://localhost:8080/mains`)      // change to final deployment site
+        result
+            .json()
+            .then(result => setMains(result))
+            .catch(e => console.log(e))
+    }
 
     const addMain = (item) => {
         console.log("dish_name, dish_price");

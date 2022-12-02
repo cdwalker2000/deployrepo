@@ -11,8 +11,8 @@ function App() {
 
   return (
     <div className="App bg-gray-100 p-[10px] md:px-[45px] md:py-[80px]">
-      {/* <Server/> */}
-      <Manager/>
+      <Server/>
+      {/* <Manager/> */}
       {/* <Customer/> */}
     </div>
   );
