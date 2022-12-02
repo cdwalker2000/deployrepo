@@ -1,9 +1,12 @@
 import React,{ useState,useEffect } from 'react'
-import Button from '../components/Button'
+import Panel from '../components/Panel2'
 import Input from '../components/Input'
+import Button from '../components/Button'
 import Inventory from '../components/Inventory'
 import Menu from '../components/Menu'
 import Report from '../components/Report'
+import SalesReport from '../components/SalesReport'
+import ReportEntries from '../components/ReportEntries'
 import { HiOutlineVolumeUp } from 'react-icons/hi'
 import {TiUser} from 'react-icons/ti'
 // import { addDish } from '../../../server/queries'
@@ -37,16 +40,6 @@ function getDateTime() {
     return dateTime;
 }
 
-// Panels
-const Panel = ({children,title,className}) => {
-    return (
-        <div className={'bg-white rounded-[15px] shadow-lg p-[5px] md:p-[20px] ' + className}>
-            <p className="mb-[10px] pb-[12px] border-gray-500 border-b-1 text-left text-xl font-bold text-blue-500">{title}</p>
-            {children}
-        </div>
-    )
-}
-
 // Main
 const Manager = () => {
 
@@ -75,6 +68,9 @@ const Manager = () => {
     const [restockReport, setRestockReport] = useState([])
     const [comboReport, setComboReport] = useState([])
 
+    // var comboReport = []
+
+
     
 
     
@@ -100,14 +96,12 @@ const Manager = () => {
 
     const handleInputChangeRestock = event => {
         const { id, value } = event.target
-        // console.log(id + ": " + value)
         setRestock({ ...restock, [id]: value })
     }
     
     const handleInputChangeReports = event => {
         const { id, value } = event.target
         setReportsInputs({ ...reportInputs, [id]: value })
-        console.log(reportInputs)
     }
 
     
@@ -464,20 +458,96 @@ const Manager = () => {
     //
 
     const getBestSellingComboReport = async (event) => {
-        
-        let condition1 = makeCondition(reportInputs.c_category1)
+        let url = "";
+        switch (reportInputs.c_category1) {
+            case "protein":
+                url = `http://localhost:8080/proteins`;
+                break;
+            case "topping":
+                url = `http://localhost:8080/toppings`;
+                break;
+            case "sauce":
+                url = `http://localhost:8080/sauces`;
+                break;
+        }
+        const result = await fetch(url)      // change to final deployment site
+        result
+            .json()
+            .then(result => getCategory2Entries(result))
+            .catch(e => console.log(e))
     }
 
-    const makeCondition = (category) => {
-        if (category == "protein") {
-            return "protein_name = $1"
+    const getCategory2Entries = async (c1Entries) => {
+        let url = "";
+        switch (reportInputs.c_category2) {
+            case "protein":
+                url = `http://localhost:8080/proteins`;
+                break;
+            case "topping":
+                url = `http://localhost:8080/toppings`;
+                break;
+            case "sauce":
+                url = `http://localhost:8080/sauces`;
+                break;
         }
-        if (category == "protein") {
-            return "protein_name = $1"
+        const result = await fetch(url)      // change to final deployment site
+        result
+            .json()
+            .then(result => calcComboSales(c1Entries, result))
+            .catch(e => console.log(e))
+    }
+
+    const calcComboSales = async (c1Entries, c2Entries) => {
+
+
+        for (let i = 0; i < c1Entries.length; i++) {
+            for (let j = 0; j < c2Entries.length; j++) {
+                let c1Entry = c1Entries[i].ingredient_name
+                let c2Entry = c2Entries[j].ingredient_name
+                let c1Condition = makeCondition(reportInputs.c_category1, c1Entry)
+                let c2Condition = makeCondition(reportInputs.c_category2, c2Entry)
+                let input = {"c1Condition" : c1Condition, "c2Condition" : c2Condition}
+                const response = await fetch(`http://localhost:8080/combo_sales`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(input),
+                });
+                response
+                    .json()
+                    // .then((response) => setComboReport([...response[0].sales]))
+                    .then((response) => {
+                        let reportEntry = {"c1Entry" : c1Entry, "c2Entry" : c2Entry, "sales" : response[0].sales}
+                        comboReport.push(reportEntry)
+                    })
+                    .catch(e => console.log(e))
+            }
         }
-        if (category == "sauce") {
-            return "sauce_name = $1"
+        setComboReport([...comboReport])
+        
+        sortComboReport()
+    }
+
+    const makeCondition = (category, cEntry) => {
+        switch (category) {
+            case "protein":
+                return "(protein_name = '" + cEntry + "')"
+            case "topping":
+                return "(ingr1_name = '" + cEntry + "' OR ingr2_name = '" + cEntry + "' OR ingr3_name = '" + cEntry + "' OR ingr4_name = '" + cEntry + "')"
+            case "sauce":
+                return "(sauce_name = '" + cEntry + "')"
         }
+        
+    }
+
+    const sortComboReport = () => {
+        comboReport.sort( (entry1, entry2) => 
+            entry2.sales - entry1.sales
+        )
+        console.log(comboReport)
+        setComboReport([...comboReport])
+        
     }
 
     const categories = [
@@ -517,7 +587,7 @@ const Manager = () => {
                 </Panel>
                 
                 <div className={'w-[500px] h-full flex flex-col justify-between'}>
-                        <Panel className="h-[48%]" title="Enter New Employee">
+                        <Panel className="h-[48%]" title="Register New Server">
                             <div className="mt-[20px]">
                                 <Input id="new_fname" label="First Name" handleInputChange={handleInputChangeNewEmployee} value={newEmployee.new_fname}/>
                                 <Input id="new_lname" label="Last Name" handleInputChange={handleInputChangeNewEmployee} value={newEmployee.new_lname}/>
@@ -567,6 +637,7 @@ const Manager = () => {
                         </div>
                     </Panel>
                 </div>
+                {/* <SalesReport /> */}
                 <div className={'w-[50%] h-full flex flex-col justify-between'}>
                     <Panel className="h-[48%]" title="Sales Report">
                         <div>
@@ -576,7 +647,7 @@ const Manager = () => {
                             </div>
                             <Button onClick={getSalesReport}>Generate Sales Report</Button>
                         </div>
-                        <Report data={salesReport} type="sales" />
+                        <ReportEntries data={salesReport} type="sales" />
                     </Panel>
                 </div>
                 <div className={'w-[50%] ml-[20px] h-full flex flex-col justify-between'}>
@@ -587,7 +658,7 @@ const Manager = () => {
                             </div>
                             <Button onClick={getExcessReport}>Generate Excess Report</Button>
                         </div>
-                        <Report data={excessReport} type="excess" />  
+                        <ReportEntries data={excessReport} type="excess" />  
                     </Panel>
                 </div>
             </div>
@@ -598,7 +669,7 @@ const Manager = () => {
                         <div>
                             <Button onClick={getRestockReport}>Generate Restock Report</Button>
                         </div>
-                        <Report data={restockReport} type="restock" />  
+                        <ReportEntries data={restockReport} type="restock" />  
                     </Panel>
                 </div>
                 <Button className="absolute bottom-0 right-0">Accessibility</Button>
@@ -643,7 +714,8 @@ const Manager = () => {
                         <br />
                         
                         <Button onClick = {getBestSellingComboReport}>Generate Best Sellers Report</Button>
-                            
+                        
+                        <ReportEntries data={comboReport} type="combo" />
                     </Panel>
                 </div>
             </div>

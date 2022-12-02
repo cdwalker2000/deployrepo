@@ -53,7 +53,9 @@ app.post('/sales_ingr1', db.excessSalesIngr1)
 app.post('/sales_ingr2', db.excessSalesIngr2)
 app.post('/sales_ingr3', db.excessSalesIngr3)
 app.post('/sales_ingr4', db.excessSalesIngr4)
-app.post('/stock_at_start', db.restocks)
+app.post('/stock_at_start', db.excessRestocks)
+app.post('/combo_sales', db.bestComboSales)
+
 
 // app.get
 

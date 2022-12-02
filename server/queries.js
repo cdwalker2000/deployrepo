@@ -426,10 +426,23 @@ const excessSalesIngr4 = (request, response) => {
 
 
 
-const restocks = (request, response) => {
+const excessRestocks = (request, response) => {
   const { ingredient_name, category, stock, start_date } = request.body
 
   pool.query("SELECT SUM(num_servings) FROM restock WHERE ingredient_name = $1 AND time > $2;", [ingredient_name, start_date], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+const bestComboSales = (request, response) => {
+  const { c1Condition, c2Condition } = request.body
+
+  let query = "SELECT COUNT(*) AS sales FROM orders WHERE (" + c1Condition + ") AND (" + c2Condition + ");"
+
+  pool.query(query, (error, results) => {
     if (error) {
       throw error
     }
@@ -470,5 +483,6 @@ const restocks = (request, response) => {
     excessSalesIngr2,
     excessSalesIngr3,
     excessSalesIngr4,
-    restocks,
+    excessRestocks,
+    bestComboSales,
   }

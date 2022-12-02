@@ -20,18 +20,19 @@ const Server = () => {
     
     // const initialNewUserState = {"fname": "", "lname": "", "username": "", "password": "", "role": "customer"}
     const initialCurrentDish = {"dish_name": "_", "protein_name": "_", "ingr1_name": "_", "ingr2_name": "_", "ingr3_name": "_", "ingr4_name": "_", "sauce_name": "_", "have_drink": -1, "total_cost": -1.11}
+    const [currentDish, setCurrentDish] = useState(initialCurrentDish)
+
     const initialCurrentServer = {"username": "", "old_password": "", "updated_password": ""}
-    const initialNewCustomer = {"new_fname": "", "new_lname": "", "new_username": "", "new_password": "", "new_role": "customer"}
-
-
     const [currentServer,setCurrentServer] = useState(initialCurrentServer)
+
+    const initialNewCustomer = {"new_fname": "", "new_lname": "", "new_username": "", "new_password": "", "new_role": "customer"}
     const [newCustomer,setNewCustomer] = useState(initialNewCustomer)
+
     const [mains,setMains] = useState([])
     const [starters,setStarters] = useState([])
     const [proteins,setProteins] = useState([])
     const [toppings,setToppings] = useState([])
     const [sauces,setSauces] = useState([])
-    const [currentDish, setCurrentDish] = useState(initialCurrentDish)
     const [ingrCount, setIngrCount] = useState(0)
     // const [newUser, setNewUser] = useState(initialNewUserState)
 
