@@ -1,16 +1,19 @@
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import Server from './pages/Server';
+import Customer from './pages/Customer'
+import Manager from './pages/Manager'
+
+
+
 
 function App() {
-  return (
-    <div className="App">
-      <h1> Pom & Honey 4 Lyfe </h1>
 
-      <div className="RegisterCustomer">
-        <label> Username </label>
-        <input type="text" name="username" />
-        <label> Password </label>
-        <input type="text" name="password" />
-      </div>
+  return (
+    <div className="App bg-gray-100 p-[10px] md:px-[45px] md:py-[80px]">
+      <Server/>
+      {/* <Manager/> */}
+      {/* <Customer/> */}
     </div>
   );
 }
