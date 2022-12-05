@@ -4,6 +4,8 @@ import Ingredient from './Ingredient'
 
 // Panels
 const Proteins = (props) => {
+
+
     const { addIngredient } = props
 
     const [proteins,setProteins] = useState([])
@@ -22,7 +24,7 @@ const Proteins = (props) => {
     }
 
     return (
-        <Panel className="h-[48%]" title="Protein">
+        <Panel className="h-[48%]" title={"Proteins"} >
             {
                 proteins.map((item, index) => (
                     <Ingredient key={"protein_" + item.ingredient_name} label={item.ingredient_name} onClick={() => addIngredient(item, "protein")} />
