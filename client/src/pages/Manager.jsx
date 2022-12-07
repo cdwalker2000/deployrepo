@@ -3,72 +3,92 @@ import Panel from '../components/Panel2'
 import Button from '../components/Button'
 import CheckInventory from '../components/CheckInventory'
 import SearchMenu from '../components/SearchMenu'
-import RegisterCustomer from '../components/RegisterServer'
 import ChangeMenu from '../components/ChangeMenu'
-import RecordRestock from '../components/RecordRestock'
-import SalesReport from '../components/SalesReport'
-import RestockReport from '../components/RestockReport'
-import ExcessReport from '../components/ExcessReport'
 import { HiOutlineVolumeUp } from 'react-icons/hi'
-import {TiUser} from 'react-icons/ti'
-import ComboReport from '../components/ComboReport'
+import { useNavigate } from 'react-router-dom';
 
 
 
 const Manager = () => {
 
+    // navigation
+    const navigate = useNavigate();
+    // to report pages
+    const toSalesReport = () => {
+        navigate('/salesReport')
+    }
+    const toExcessReport = () => {
+        navigate('/excessReport')
+    }
+    const toBestSellersReport = () => {
+        navigate('/bestSellersReport')
+    }
+    const toRestockReport = () => {
+        navigate('/restockReport')
+    }
+    const toRegisterEmployee = () => {
+        navigate('/registerEmployee')
+    }
+    const toRecordRestock = () => {
+        navigate('/recordRestock')
+    }
+
     return (
         <>
-            <div className="flex flex-col md:flex-row h-[600px] relative">
+            <div className={'w-[200px] mb-[20px] mt-[20px] h-full flex flex-col justify-between ml-[25px]'}>
+                    <Button type="danger">Log Off</Button>
+            </div>
+
+            <div className="flex flex-col md:flex-row h-[700px] mb-[50px] relative">
+
                 <div className="absolute h-[70px] w-[70px] right-[10px] top-[-20px] rounded-full flex items-center justify-around bg-blue-500 hover:opacity-50 shadow-md">
                     <HiOutlineVolumeUp size={40} color="white"/>
                 </div>
-                {/* <div>
-                    <TiUser style={{fontSize: '50px'}}/> <h1>Manager Name</h1>
-                </div> */}
                 <CheckInventory />
 
                 <SearchMenu />
                 
                 <div className={'w-[500px] h-full flex flex-col justify-between'}>
-                    <RegisterCustomer />
                     <ChangeMenu />
                 </div>
-                <div className={'w-[200px] h-full flex flex-col justify-between ml-[25px]'}>
+               {/* <div className={'w-[200px] h-full flex flex-col justify-between ml-[25px]'}>
                     <Panel className="h-[48%]" title="Sign Out">
                         <div className="flex justify-between">
                             <Button type="danger">Log Off</Button>
-                        </div>
+                        </div> 
                     </Panel>
                 </div>
+             */}
               
             </div>
-            <div className="flex flex-col md:flex-row justify-between h-[600px] mt-[50px] pb-[0px] relative">
-                <div className={'w-[50%] mr-[20px] h-full flex flex-col justify-between'}>
-                    <RecordRestock />
-                </div>
-                <div className={'w-[50%] h-full flex flex-col justify-between'}>
-                    <SalesReport />
-                </div>
-                
-                
-                <div className={'w-[50%] ml-[20px] h-full flex flex-col justify-between'}>
-                    <ExcessReport />
-                </div>
-            </div>
 
-            <div className="flex flex-col md:flex-row justify-between h-[800px] mt-[0px] pb-[0px] relative">
-                <div className={'w-[50%] h-full flex flex-col justify-between'}>
-                    <RestockReport />
+            <div className="flex flex-col md:flex-row justify-between h-[150px] mt-[0px] pb-[0px] relative">
+                <div className={'w-[16%]  mr-[20px] ml-[20px]'}>
+                    <Button onClick={toRegisterEmployee}>Register Employee</Button>
+                </div>
+
+                <div className={'w-[16%]  mr-[20px]'}>
+                    <Button onClick={toRecordRestock}>Record Restock Order</Button>
+                </div>
+
+                <div className={'w-[16%]  mr-[20px]'}>
+                    <Button onClick={toRestockReport}>View Restock Report</Button>
+                </div>
+
+                <div className={'w-[16%]  mr-[20px]'}>
+                    <Button onClick={toSalesReport}>View Sales Report</Button>
+                </div>
+                
+                <div className={'w-[16%]  mr-[20px]'}>
+                    <Button onClick={toExcessReport}>View Excess Report</Button>
+                </div>
+
+                <div className={'w-[16%] mr-[20px]'}>
+                    <Button onClick={toBestSellersReport}>View Combo Report</Button>
                 </div>
                 <Button className="absolute bottom-0 right-0">Accessibility</Button>
             </div>
 
-            <div className="flex flex-col md:flex-row justify-between h-[700px] mt-[0px] pb-[0px] relative">
-                <div className={'w-[50%] mr-[20px] h-full flex flex-col justify-between'}>
-                    <ComboReport />
-                </div>
-            </div>
         </>
     )
 }
