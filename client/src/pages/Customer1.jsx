@@ -6,6 +6,8 @@ import Modal from 'antd/lib/modal/Modal';
 import menu from '../assets/menu.webp'
 import { Button as AButton } from 'antd';
 import ModalC from '../components/Modal';
+import Mains from '../components/Customer/Mains';
+import Starters from '../components/Customer/Starters';
 
 
 const Panel = ({ children, title, className }) => {
@@ -55,10 +57,44 @@ const Customer1 = () => {
         { name: "combo with drink", price: '8.99' },
         { name: "combo with fries and drink", price: '8.99' },
         { name: "pita", price: '7.69' }]
+
+        const initialCurrentDish = {"dishname": "", "proteinname": "", "ingr1name": "", "ingr2name": "", "ingr3name": "", "ingr4name": "", "saucename": "", "have_drink": -1, "total_cost": -1.11}
+        const [currentDish, setCurrentDish] = useState(initialCurrentDish)
+    
+        const [ingrCount, setIngrCount] = useState(0)
+    
+    
+        const addIngredient = (item, category) => {
+            let colname = "";
+            let canAddIngredient = true;
+            if (category == "protein") {
+                colname = "protein_name";
+            }
+            if (category == "topping") {
+                if (ingrCount < 4) {
+                    colname = "ingr" + (ingrCount+1) + "_name";
+                    setIngrCount(ingrCount + 1);
+                }
+                else {
+                    canAddIngredient =  false;
+                }
+            }
+            if (category == "sauce") {
+                colname = "sauce_name";
+            }
+            if (canAddIngredient) {
+                console.log(colname);
+                setCurrentDish({ ...currentDish, [colname]: item.ingredient_name });
+            }
+            else {
+                console.log("Can't add ingredient");
+            }
+        }
+
     return (
         <div>
             <div className="pt-[30px] px-[50px]">
-                <img className="h-[60px]" src={logo} />
+                <img className="h-[150px]" src={logo} />
             </div>
             <div className="absolute h-[70px] w-[70px] right-[50px] top-[30px] rounded-full flex items-center justify-around bg-blue-500 hover:opacity-50 shadow-md">
                 <HiOutlineVolumeUp size={30} color="white" />
@@ -66,7 +102,7 @@ const Customer1 = () => {
             {/* click open cart modal */}
             <div onClick={() => setVisible(true)} className="absolute text-white h-[70px] w-[70px] right-[50px] top-[120px] rounded-full flex items-center justify-around bg-blue-500 hover:opacity-50 shadow-md">Cart</div>
             <div className="flex md:flex-row relative justify-between mt-[100px] px-[50px]">
-                <Panel className="w-[48%]" title="Main">
+                {/* <Panel className="w-[48%]" title="Main">
                     {mainList.map((item, index) => (
                         <div key={index} className="flex items-center justify-between mb-[12px]">
                             <div className="w-[100px] h-[100px] rounded-[4px] overflow-hidden">
@@ -76,8 +112,9 @@ const Customer1 = () => {
                             <span className="font-bold text-red-500">${item.price}</span>
                         </div>
                     ))}
-                </Panel>
-                <Panel className="w-[48%]" title="Starter">
+                </Panel> */}
+                <Mains currentDish={currentDish} setCurrentDish={setCurrentDish} />
+                {/* <Panel className="w-[48%]" title="Starter">
                     {mainList.map((item, index) => (
                         <div key={index} className="flex items-center justify-between mb-[12px]">
                             <div className="w-[100px] h-[100px] rounded-[4px] overflow-hidden">
@@ -87,7 +124,8 @@ const Customer1 = () => {
                             <span className="font-bold text-red-500">${item.price}</span>
                         </div>
                     ))}
-                </Panel>
+                </Panel> */}
+                <Starters currentDish={currentDish} setCurrentDish={setCurrentDish} />
             </div>
             <ModalC
                 close={() => setVisible(false)}

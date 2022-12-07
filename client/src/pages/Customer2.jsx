@@ -6,6 +6,13 @@ import Modal from 'antd/lib/modal/Modal';
 import menu from '../assets/menu.webp'
 import { Button as AButton } from 'antd';
 import ModalC from '../components/Modal';
+import Proteins from '../components/Customer/Proteins';
+import Toppings from '../components/Customer/Toppings';
+import Sauces from '../components/Customer/Sauces';
+import Cart from '../components/Customer/Cart';
+
+
+
 
 
 const Panel = ({ children, title, className }) => {
@@ -17,7 +24,8 @@ const Panel = ({ children, title, className }) => {
     )
 }
 
-const Customer2 = () => {
+const Customer2 = (props) => {
+    const {setCurrentDish, currentDish} = props
     const menuList = [
         {
             name: 'pita',
@@ -55,10 +63,41 @@ const Customer2 = () => {
         { name: "combo with drink", price: '8.99' },
         { name: "combo with fries and drink", price: '8.99' },
         { name: "pita", price: '7.69' }]
+
+        const [ingrCount, setIngrCount] = useState(0)
+    
+    
+        const addIngredient = (item, category) => {
+            let colname = "";
+            let canAddIngredient = true;
+            if (category == "protein") {
+                colname = "protein_name";
+            }
+            if (category == "topping") {
+                if (ingrCount < 4) {
+                    colname = "ingr" + (ingrCount+1) + "_name";
+                    setIngrCount(ingrCount + 1);
+                }
+                else {
+                    canAddIngredient =  false;
+                }
+            }
+            if (category == "sauce") {
+                colname = "sauce_name";
+            }
+            if (canAddIngredient) {
+                console.log(colname);
+                setCurrentDish({ ...currentDish, [colname]: item.ingredient_name });
+            }
+            else {
+                console.log("Can't add ingredient");
+            }
+        }
+    
     return (
         <div>
             <div className="pt-[30px] px-[60px]">
-                <img className="h-[60px]" src={logo} />
+                <img className="h-[150px]" src={logo} />
             </div>
             <div className="absolute h-[70px] w-[70px] right-[60px] top-[30px] rounded-full flex items-center justify-around bg-blue-500 hover:opacity-50 shadow-md">
                 <HiOutlineVolumeUp size={30} color="white" />
@@ -66,7 +105,7 @@ const Customer2 = () => {
             {/* click open cart modal */}
             <div onClick={() => setVisible(true)} className="absolute text-white h-[70px] w-[70px] right-[60px] top-[120px] rounded-full flex items-center justify-around bg-blue-500 hover:opacity-50 shadow-md">Cart</div>
             <div className="flex md:flex-row mt-[120px] relative justify-between px-[60px]">
-                <Panel className="w-[48%]" title="Protein">
+                {/* <Panel className="w-[48%]" title="Protein">
                 <div className="flex w-[100%] overflow-auto">
                         {mainList.map((item, index) => (
                             <div key={index} className="flex flex-col h-[270px] mr-[20px] items-center justify-between mb-[12px]">
@@ -78,8 +117,9 @@ const Customer2 = () => {
                             </div>
                         ))}
                     </div>
-                </Panel>
-                <Panel className="w-[48%]" title="Toppings">
+                </Panel> */}
+                <Proteins addIngredient={addIngredient}/>
+                {/* <Panel className="w-[48%]" title="Toppings">
                 <div className="flex w-[100%] overflow-auto">
                         {mainList.map((item, index) => (
                             <div key={index} className="flex flex-col h-[270px] mr-[20px] items-center justify-between mb-[12px]">
@@ -91,8 +131,9 @@ const Customer2 = () => {
                             </div>
                         ))}
                     </div>
-                </Panel>
-                <Panel className="w-[48%]" title="Sauce">
+                </Panel> */}
+                <Toppings addIngredient={addIngredient}/>
+                {/* <Panel className="w-[48%]" title="Sauce">
                 <div className="flex w-[100%] overflow-auto">
                         {mainList.map((item, index) => (
                             <div key={index} className="flex flex-col h-[270px] mr-[20px] items-center justify-between mb-[12px]">
@@ -104,7 +145,8 @@ const Customer2 = () => {
                             </div>
                         ))}
                     </div>
-                </Panel>
+                </Panel> */}
+                <Sauces addIngredient={addIngredient}/>
             </div>
             <div className="flex justify-around px-[60px] mt-[20px]">
                 <div className="flex">
@@ -117,9 +159,9 @@ const Customer2 = () => {
                 close={() => setVisible(false)}
                 visible={visible}
                 style={{fontSize: '30px'}}
-                title="Add Ons"
+                title="Current Order & Check Out"
             >
-                    <div className="h-full px-[10px] overflow-auto">
+                    {/* <div className="h-full px-[10px] overflow-auto">
                         {menuList.map((item, index) => (
                             <div className="mb-[20px]">
                                 <div className="flex font-bold text-xl justify-between items-center">
@@ -142,7 +184,8 @@ const Customer2 = () => {
                         <Button className="mx-[5px]">Cancel</Button>
                         <Button className="mx-[5px]">Delete</Button>
                         <Button className="mx-[5px]">Confirm</Button>
-                    </div>
+                    </div> */}
+                    <Cart></Cart>
             </ModalC>
         </div>
     )
