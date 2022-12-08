@@ -19,9 +19,20 @@ const Mains = (props) => {
             .catch(e => console.log(e))
     }
 
-    const addMain = (item) => {
-        console.log("dish_name, dish_price");
-        setCurrentDish({ ...currentDish, ["dish_name"]: item.dish_name, ["total_cost"]: item.dish_price });
+    const addMain = async (item) => {
+        // JC : NAVIGATE TO THE CUSTOMER 2
+        
+        console.log("addMain sends request");
+        
+        const response = await fetch('http://localhost:8080/add_dish', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"dish_name": item.dish_name}),
+        })
+
+        console.log("addMain got response");
     }
 
     const Panel = ({ children, title, className }) => {

@@ -31,8 +31,13 @@ app.post('/change_password', db.changePassword)
 
 app.get('/cart', db.getCart)
 app.post('/clear_cart', db.clearCart)
-app.post('/add_dish_to_cart', db.addDishToCart)
+app.post('/add_dish', db.addDishToCart)
+app.post('/add_ingr', db.addIngrToCart)
+app.get('/add_drink', db.addDrinkToCart)
+app.get('/finalize', db.finalizeDish)
 app.delete('/delete_last_dish', db.deleteLastDish)
+app.get('/next_order_id', db.nextOrderID)
+app.post('/push_cart_item', db.pushCartItem)
 
 app.get('/mains', db.getMains)
 app.get('/starters', db.getStarters)
@@ -41,6 +46,8 @@ app.get('/dish_type/:dish_id', db.getDishType)
 app.get('/proteins', db.getProteins)
 app.get('/toppings', db.getToppings)
 app.get('/sauces', db.getSauces)
+
+// Manager
 
 app.post('/inventory', db.getInventory)
 app.post('/new_user', db.addNewUser)
@@ -51,8 +58,6 @@ app.post('/remove_dish', db.removeDish)
 app.post('/restock', db.addNewRestock)
 app.post('/update_inventory', db.updateInventoryStock)
 app.post('/menu', db.getMenu)
-
-// Manager
 
 app.post('/sales_report', db.getSalesReport)
 app.post('/dish_name', db.dishName)

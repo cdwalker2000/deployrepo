@@ -64,7 +64,17 @@ const clearCart = (request, response) => {
   console.log("clearCart start");
   console.log("dropped table");
   let drop = "DROP TABLE cart;"
-  let create = "CREATE TABLE cart (cart_item_id SERIAL PRIMARY KEY, dish_name VARCHAR(50) NOT NULL, protein_name VARCHAR(50), ingr1_name VARCHAR(50), ingr2_name VARCHAR(50), ingr3_name VARCHAR(50), ingr4_name VARCHAR(50), sauce_name VARCHAR(50), have_drink INT NOT NULL, total_cost FLOAT NOT NULL);"
+  let create = "CREATE TABLE IF NOT EXISTS cart ("
+                + "cart_item_id SERIAL PRIMARY KEY,"
+                + "dish_name VARCHAR(50) NOT NULL,"
+                + "protein_name VARCHAR(50),"
+                + "ingr1_name VARCHAR(50),"
+                + "ingr2_name VARCHAR(50),"
+                + "ingr3_name VARCHAR(50),"
+                + "ingr4_name VARCHAR(50),"
+                + "sauce_name VARCHAR(50),"
+                + "have_drink INT DEFAULT 0,"
+                + "total_cost NUMERIC(8, 2) ) ;";
   let dropCreate = drop + " " + create;
   pool.query(dropCreate, (error, results) => {
     if (error) {
@@ -80,16 +90,68 @@ const clearCart = (request, response) => {
 //
 
 const addDishToCart = (request, response) => {
-  const { dish_name, protein_name, ingr1_name, ingr2_name, ingr3_name, ingr4_name, sauce_name, have_drink, total_cost } = request.body
+  const { dish_name } = request.body
 
-  // console.log("Got here4");
-  console.log(dish_name, protein_name, ingr1_name, ingr2_name, ingr3_name, ingr4_name, sauce_name, have_drink, total_cost );
+  console.log(dish_name);
 
-  pool.query('INSERT INTO cart (dish_name, protein_name, ingr1_name, ingr2_name, ingr3_name, ingr4_name, sauce_name, have_drink, total_cost) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [dish_name, protein_name, ingr1_name, ingr2_name, ingr3_name, ingr4_name, sauce_name, have_drink, total_cost], (error, result) => {
+  let query = "INSERT INTO cart (dish_name, have_drink) VALUES ('" + dish_name + "', 0);";
+
+  console.log(query)
+
+  pool.query(query, (error, result) => {
     if (error) {
       throw error
     }
-    response.status(201).send(`Cart item added`);
+    response.status(201).send(`Dish added`);
+  })
+}
+
+//
+
+const addIngrToCart = (request, response) => {
+  const { col_name, ingredient_name } = request.body
+
+  console.log(col_name, ingredient_name);
+
+  let query = "UPDATE cart SET " + col_name + " = '" + ingredient_name + "' WHERE cart_item_id = (SELECT cart_item_id FROM cart ORDER BY cart_item_id DESC LIMIT(1));";
+
+  pool.query(query, (error, result) => {
+    if (error) {
+      throw error
+    }
+    response.status(201).send(`Ingredient added`);
+  })
+}
+
+//
+
+const addDrinkToCart = (request, response) => {
+  console.log("add drink")
+  
+  let query = "UPDATE cart SET have_drink = 1 WHERE cart_item_id = (SELECT cart_item_id FROM cart ORDER BY cart_item_id DESC LIMIT(1));";
+
+  pool.query(query, (error, result) => {
+    if (error) {
+      throw error
+    }
+    response.status(201).send(`Drink added`);
+  })
+}
+
+//
+
+const finalizeDish = (request, response) => {
+  console.log("finalize dish")
+
+  let drink_price = 1.5;
+  
+  let query = "UPDATE cart SET total_cost = (SELECT dish_price FROM dish WHERE dish_name = (SELECT dish_name FROM cart WHERE cart_item_id = (SELECT cart_item_id FROM cart ORDER BY cart_item_id DESC LIMIT(1)))) + " + drink_price + " * (SELECT have_drink FROM cart WHERE cart_item_id = (SELECT cart_item_id FROM cart ORDER BY cart_item_id DESC LIMIT(1))) WHERE cart_item_id = (SELECT cart_item_id FROM cart ORDER BY cart_item_id DESC LIMIT(1));";
+
+  pool.query(query, (error, result) => {
+    if (error) {
+      throw error
+    }
+    response.status(201).send(`Dish finalized`);
   })
 }
 
@@ -101,6 +163,30 @@ const deleteLastDish = (request, response) => {
       throw error
     }
     response.status(201).send(`Last cart item deleted`);
+  })
+}
+
+//
+
+const nextOrderID = (request, response) => {
+  pool.query("SELECT (SELECT order_id FROM orders ORDER BY order_id DESC LIMIT(1)) + 1 AS order_id;", (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+//
+
+const pushCartItem = (request, response) => {
+  const { cart_item_id, dish_name, have_drink, ingr1_name, ingr2_name, ingr3_name, ingr4_name, order_id, protein_name, sauce_name, time, total_cost } = request.body
+  
+  pool.query('INSERT INTO orders (cart_item_id, dish_name, have_drink, ingr1_name, ingr2_name, ingr3_name, ingr4_name, order_id, protein_name, sauce_name, time, total_cost) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);', [cart_item_id, dish_name, have_drink, ingr1_name, ingr2_name, ingr3_name, ingr4_name, order_id, protein_name, sauce_name, time, total_cost], (error, result) => {
+    if (error) {
+      throw error
+    }
+    response.status(201).send(`Cart item pushed`);
   })
 }
 
@@ -471,7 +557,12 @@ const bestComboSales = (request, response) => {
     getCart,
     clearCart,
     addDishToCart,
+    addIngrToCart,
+    addDrinkToCart,
+    finalizeDish,
     deleteLastDish,
+    nextOrderID,
+    pushCartItem,
     getMains,
     getStarters,
     getDishType,
