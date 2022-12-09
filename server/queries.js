@@ -89,7 +89,23 @@ const clearCart = (request, response) => {
 
 //
 
-const addDishToCart = (request, response) => {
+const pushDishToCart = (request, response) => {
+  const { dish_name, protein_name, ingr1_name, ingr2_name, ingr3_name, ingr4_name, sauce_name, have_drink, total_cost } = request.body
+
+  // console.log("Got here4");
+  console.log(dish_name, protein_name, ingr1_name, ingr2_name, ingr3_name, ingr4_name, sauce_name, have_drink, total_cost );
+
+  pool.query('INSERT INTO cart (dish_name, protein_name, ingr1_name, ingr2_name, ingr3_name, ingr4_name, sauce_name, have_drink, total_cost) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [dish_name, protein_name, ingr1_name, ingr2_name, ingr3_name, ingr4_name, sauce_name, have_drink, total_cost], (error, result) => {
+    if (error) {
+      throw error
+    }
+    response.status(201).send(`Cart item added`);
+  })
+}
+
+//
+
+const newDishToCart = (request, response) => {
   const { dish_name } = request.body
 
   console.log(dish_name);
@@ -556,7 +572,8 @@ const bestComboSales = (request, response) => {
     changePassword,
     getCart,
     clearCart,
-    addDishToCart,
+    pushDishToCart,
+    newDishToCart,
     addIngrToCart,
     addDrinkToCart,
     finalizeDish,

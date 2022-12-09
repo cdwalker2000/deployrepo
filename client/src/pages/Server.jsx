@@ -42,44 +42,9 @@ const Home = () => {
     const navigate = useNavigate();
     const { size,color } = useCustomContext();
     
-    // current order display for temp
-    const menuList = [
-        {
-            name: 'pita',
-            children: ["falafel", "diced cucumbers", "tomato-onion salad", "roasted cauliflower", "roasted peppers", "tzatziki", "No Drink",],
-            price: 7.69
-        },
-        {
-            name: 'salad',
-            children: ["falafel", "diced cucumbers", "tomato-onion salad", "roasted cauliflower", "roasted peppers", "tzatziki", "No Drink",],
-            price: 7.69
-        }
-    ]
     
     const { user, handleChange } = useCustomContext();
-    // store order and price
-    const [order, setOrder] = useState([
-        //{ name: 'test order', price: '$100.8' },
-    ])
 
-    // get the total
-    const getTotal = () => {
-        let sum = 0;
-        sum = menuList.reduce((cur,item) => {
-            return cur + item.price
-        },0)
-        // keep two digits
-        return sum.toFixed(2);
-    }
-    // initialize the order list, with the array, can be changed to array read from database
-    const initMockList = () => {
-        // create order list with random price
-        const mock = Array.from(new Array(20)).map((_, index) => ({ name: `order ${index}`, price: `$${Math.round(Math.random() * 50 + 10)}` }))
-        setOrder(mock)
-    }
-    useEffect(() => {
-        initMockList()
-    }, [])
 
     const initialCurrentDish = {"dishname": "", "proteinname": "", "ingr1name": "", "ingr2name": "", "ingr3name": "", "ingr4name": "", "saucename": "", "have_drink": -1, "total_cost": -1.11}
     const [currentDish, setCurrentDish] = useState(initialCurrentDish)
@@ -132,33 +97,7 @@ const Home = () => {
                 Confirm: confirm the order and which push everything in the cart, update the order history and inventory
                 then clear out the cart
                 */}
-                {/* <Panel title="Current Order & Check Out" className="mr-[25px] relative w-full md:w-[500px] h-full flex flex-col items-between">
-                    <div className="h-full px-[10px] overflow-auto">
-                        {menuList.map((item, index) => (
-                            <div className="mb-[20px]">
-                                <div className="flex font-bold text-xl justify-between items-center">
-                                    <span>{item.name}</span>
-                                    <span className="text-red-500">${item.price}</span>
-                                </div>
-                                <div className="text-right mt-[12px]">
-                                    {item.children && item.children.map((citem, index) => (
-                                        <div className="text-left" key={index}>{citem}</div>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
-                        <div className="flex font-bold text-xl justify-between items-center">
-                            <span>Total</span>
-                            <span className="text-red-500">${getTotal()}</span>
-                        </div>
-                    </div>
-                    <div class="min-h-[60px] items-center flex w-full">
-                        <Button className="mx-[5px]">Cancel</Button>
-                        <Button className="mx-[5px]">Delete</Button>
-                        <Button className="mx-[5px]">Add Order</Button>
-                        <Button className="mx-[5px]">Confirm</Button>
-                    </div>
-                </Panel> */}
+                
                 <Cart currentDish={currentDish} setCurrentDish={setCurrentDish} initialCurrentDish={initialCurrentDish} setIngrCount={setIngrCount} />
                 <div className={'w-[800px] h-full flex flex-col justify-between'}>
                     {/* <Panel className="h-[100%]" title="User Settings">

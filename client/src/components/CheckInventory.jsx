@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import Panel from '../components/Panel2'
-import Input from '../components/Input'
-import Button from '../components/Button'
-import Inventory from '../components/Inventory'
+import Panel from './Panel2'
+import Input from './Input'
+import Button from './Button'
+import Inventory from './Inventory'
 
 
 const CheckInventory = () => {
