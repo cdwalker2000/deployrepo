@@ -4,7 +4,6 @@ import CartItem from './CartItem'
 
 
 const Cart = (props) => {
-    const { currentDish, setCurrentDish, initialCurrentDish, setIngrCount } = props;
 
     const [cart,setCart] = useState([])
 
@@ -23,11 +22,10 @@ const Cart = (props) => {
     // get the total price
     const getTotal = () => {
         let sum = 0;
-        sum = cart.reduce((cur,item) => {
-            return cur + item.total_cost
-        },0)
-        // keep 2 digits
-        return sum.toFixed(2);
+        for (let i = 0; i < cart.length; i++) {
+            sum += parseFloat(cart.at(i).total_cost)
+        }
+        return sum;
     }
 
     const deleteLastDish = async (event) => {
@@ -43,33 +41,10 @@ const Cart = (props) => {
         fetchCart();
     }
 
-    const addDishToCart = async (event) => {
-        event.preventDefault()
-        
-        console.log("addDishToCart sends request");
-        
-        const response = await fetch('http://localhost:8080/add_dish_to_cart', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(currentDish),
-        })
-        console.log("addDishToCart got response");
-        console.log(response)
-        fetchCart();
-        setCurrentDish(initialCurrentDish);
-        setIngrCount(0);
-    }
-
-    const cancelOrder = async (event) => {
-        // GO BACK TO LOGIN SCREEN ???
-
-        event.preventDefault()
-        
+    const cancelOrder = async () => {
+        // clear cart        
         console.log("clearCart sends response");
-        
-        const response = await fetch('http://localhost:8080/clear_cart', {
+        await fetch('http://localhost:8080/clear_cart', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -77,10 +52,101 @@ const Cart = (props) => {
             body: "",
         })
         console.log("clearCart got response");
-        console.log(response)
         fetchCart();
-        setCurrentDish(initialCurrentDish);
-        setIngrCount(0);
+    }
+
+    const updateInventory = async (ingredient_name, num_servings) => {
+        await fetch('http://localhost:8080/update_inventory', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"ingredient_name": ingredient_name, "num_servings": num_servings}),
+        })
+    }
+
+    const nextOrderID = async (cart_item) => {
+        const response = await fetch('http://localhost:8080/next_order_id')
+        response
+            .json()
+            .then((response) => pushCartToOrders(cart_item, response[0].order_id))
+    }
+
+    const pushCartToOrders = async (cart_item, order_id) => {
+        cart_item.order_id = order_id;
+        await fetch('http://localhost:8080/push_cart_item', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(cart_item),
+        })
+    }
+
+    const confirmOrder = async () => {
+        // update inventory
+        // add to order history
+        // clear cart
+        
+        console.log("updateInventory sends response");
+        cart.forEach( (cart_item) => {
+            let keys = ['protein_name', 'ingr1_name', 'ingr2_name', 'ingr3_name', 'ingr4_name', 'sauce_name']
+            keys.forEach((key) => {
+                if (cart_item[key] != null) {
+                    updateInventory(cart_item[key], -1)
+                }
+            })
+        })
+        console.log("updateInventory got response");
+
+        console.log("pushCartToOrders sends response");
+        cart.forEach( (cart_item) => {
+            cart_item.time = getDateTime();
+            nextOrderID(cart_item);
+        })
+        console.log("updateInventory got response");
+
+        
+        console.log("clearCart sends response");
+        await fetch('http://localhost:8080/clear_cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: "",
+        })
+        console.log("clearCart got response");
+        
+        fetchCart();
+    }
+
+    function getDateTime() {
+        var now     = new Date(); 
+        var year    = now.getFullYear();
+        var month   = now.getMonth()+1; 
+        var day     = now.getDate();
+        var hour    = now.getHours();
+        var minute  = now.getMinutes();
+        var second  = now.getSeconds(); 
+        if (month.toString().length == 1) {
+             month = '0' + month;
+        }
+        if (day.toString().length == 1) {
+             day = '0' + day;
+        }   
+        if (hour.toString().length == 1) {
+             hour = '0' + hour;
+        }
+        if (minute.toString().length == 1) {
+             minute = '0' + minute;
+        }
+        if (second.toString().length == 1) {
+             second = '0' + second;
+        }   
+        var dateTime = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;   
+        console.log("Made datetime: " + dateTime)
+        
+        return dateTime;
     }
 
     const Panel = ({ children, title, className }) => {
@@ -107,7 +173,7 @@ const Cart = (props) => {
                 <Button onClick={cancelOrder} className="mx-[5px]">Cancel</Button>
                 <Button onClick={deleteLastDish} className="mx-[5px]">Delete Last Dish</Button>
                 {/* <Button onClick={addDishToCart} className="mx-[5px]">Add Dish</Button> */}
-                <Button className="mx-[5px]">Confirm</Button>
+                <Button onClick={confirmOrder} className="mx-[5px]">Confirm</Button>
             </div>
         </Panel>
     )

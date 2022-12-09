@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import Button from '../components/Button'
 import Input from '../components/Input'
+import { useNavigate } from 'react-router-dom';
 
 // Panels
 const ChangePassword = () => {
     const initialCurrentServer = {"username": "", "old_password": "", "updated_password": ""}
     const [currentServer,setCurrentServer] = useState(initialCurrentServer)
+    const navigate = useNavigate(); //use navigate to jump
 
     const handleChangeCurrentServer = event => {
         const { id, value } = event.target
@@ -30,6 +32,10 @@ const ChangePassword = () => {
         console.log("changePassword got response");
     }
 
+    const toHome = () => {
+        navigate('/')
+    }
+
     // const Panel = ({ children, title, className }) => {
     //     return (
     //         <div className={'bg-white overflow-auto rounded-[15px] shadow-lg p-[5px] md:p-[20px] ' + className}>
@@ -51,7 +57,7 @@ const ChangePassword = () => {
         <Panel className="h-[100%]" title="User Settings">
             <div className="flex justify-between">
                 <Button onClick={changePassword}>Change Password</Button>
-                <Button type="danger">Log Off</Button>
+                <Button type="danger" onClick={toHome}>Log Off</Button>
             </div>
             <div className="mt-[20px]">
                 <Input id="username" label="Username" handleInputChange={handleChangeCurrentServer} value={currentServer.username}/>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Dish from '../Server/Dish'
+import { message } from 'antd';
 
 // Panels
 const Starters = (props) => {
@@ -27,6 +28,7 @@ const Starters = (props) => {
         // ALSO CREATE NEW COMPONENT WITHOUT ANY CHILDREN, JUST THE NAME OF THE DISH AND THE PRICE
         console.log("dish_name, dish_price");
         setCurrentDish({ ...currentDish, ["dish_name"]: item.dish_name, ["total_cost"]: item.dish_price });
+        message.success('Preset Combo Has Been Selected');
     }
 
     const Panel = ({ children, title, className }) => {

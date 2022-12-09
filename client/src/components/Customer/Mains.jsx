@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import Dish from './Dish'
+import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 
 // Panels
 const Mains = (props) => {
     const { currentDish, setCurrentDish } = props
 
     const [mains,setMains] = useState([])
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchMains();
@@ -19,9 +22,24 @@ const Mains = (props) => {
             .catch(e => console.log(e))
     }
 
-    const addMain = (item) => {
-        console.log("dish_name, dish_price");
-        setCurrentDish({ ...currentDish, ["dish_name"]: item.dish_name, ["total_cost"]: item.dish_price });
+    const addMain = async (item) => {
+        // JC : NAVIGATE TO THE CUSTOMER 2
+        
+        console.log("addMain sends request");
+        
+        const response = await fetch('http://localhost:8080/add_dish', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"dish_name": item.dish_name}),
+        })
+
+        console.log("addMain got response");
+        // mark the click 
+        message.success('Entree has selected');
+        // navigate to customer 2
+        navigate('/customer2');
     }
 
     const Panel = ({ children, title, className }) => {

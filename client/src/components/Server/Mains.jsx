@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Dish from '../Server/Dish'
+import { message } from 'antd';
 
 // Panels
 const Mains = (props) => {
@@ -20,6 +21,7 @@ const Mains = (props) => {
     }
 
     const addMain = (item) => {
+        message.success('Entree Has Been Selected');
         console.log("dish_name, dish_price");
         setCurrentDish({ ...currentDish, ["dish_name"]: item.dish_name, ["total_cost"]: item.dish_price });
     }

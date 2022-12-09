@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Dish from '../Customer/Dish'
+import { message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 // Panels
 const Starters = (props) => {
@@ -7,6 +9,8 @@ const Starters = (props) => {
 
 
     const [starters, setStarters] = useState([])
+
+    const navigate = useNavigate(); //use navigate to jump
 
     useEffect(() => {
         fetchStarters();
@@ -20,13 +24,33 @@ const Starters = (props) => {
             .catch(e => console.log(e))
     }
 
-    
 
-    const addStarter = (item) => {
+    const addStarter = async (item) => {    
         // BLOCK ANY INGREDIENTS --> NEED TO IMMEDIATELY ADD THE DISH INSTEAD OF CLICKING ANY TOPPINGS
-        // ALSO CREATE NEW COMPONENT WITHOUT ANY CHILDREN, JUST THE NAME OF THE DISH AND THE PRICE
-        console.log("dish_name, dish_price");
-        setCurrentDish({ ...currentDish, ["dish_name"]: item.dish_name, ["total_cost"]: item.dish_price });
+        // JC : popup/green check at top on Customer 1 after pressing this (since we don't go to a new page, need feedback)
+        message.success('A Combo Has Been Selected and Added To Cart');
+
+        console.log("addStarter sends request");
+        
+        await fetch('http://localhost:8080/add_dish', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"dish_name": item.dish_name}),
+        })
+
+        console.log("addStarter got response");
+
+        // JC : NAVIGATE BACK TO CUSTOMER 1 (or stay on the same page in this case)
+        navigate('/customer1')
+
+        console.log("finalizeDish sends request");
+    
+        await fetch('http://localhost:8080/finalize')
+
+        console.log("finalizeDish got response");
+        
     }
 
     const Panel = ({ children, title, className }) => {

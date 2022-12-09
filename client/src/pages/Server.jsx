@@ -13,6 +13,7 @@ import Toppings from '../components/Server/Toppings'
 import Sauces from '../components/Server/Sauces'
 import Cart from '../components/Server/Cart'
 import ChangePassword from '../components/ChangePassword'
+import { message } from 'antd';
 
 
 
@@ -62,6 +63,11 @@ const Home = () => {
         //{ name: 'test order', price: '$100.8' },
     ])
 
+    // navigate to Server page
+    const toServer = () => {
+        navigate('/server')
+    }
+
     // get the total
     const getTotal = () => {
         let sum = 0;
@@ -92,11 +98,13 @@ const Home = () => {
         let canAddIngredient = true;
         if (category == "protein") {
             colname = "protein_name";
+            message.success('Protein Added');
         }
         if (category == "topping") {
             if (ingrCount < 4) {
                 colname = "ingr" + (ingrCount+1) + "_name";
                 setIngrCount(ingrCount + 1);
+                message.success('Topping Added');
             }
             else {
                 canAddIngredient =  false;
@@ -104,6 +112,7 @@ const Home = () => {
         }
         if (category == "sauce") {
             colname = "sauce_name";
+            message.success('Sauce Added');
         }
         if (canAddIngredient) {
             console.log(colname);
@@ -225,7 +234,7 @@ const Home = () => {
                         <Sauces addIngredient={addIngredient} />
                     </div>
                 </div>
-                <Button className="absolute bottom-[10px] right-[10px]">View Order</Button>
+                <Button className="absolute bottom-[10px] right-[10px]" onClick={toServer}>View Order</Button>
             </div>
         </div>
     )
