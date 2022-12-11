@@ -4,14 +4,16 @@ import menu from '../../assets/menu.webp'
 
 // buttons
 const Ingredient = (props) => {
-    const {label, onClick, round,className,type,block} = props;
-    // use the useRef hook to get the button dom instance
+    const { label, onClick, round, className, type, block } = props;
+
 
     let image = require('../../assets/images/meatballs.webp')
     if (label != null) {
         image = require('../../assets/images/' + label.replaceAll(" ", "-") + ".webp")
     }
 
+
+    // use the useRef hook to get the button dom instance
     const cur = useRef();
     // import property from context
     const { size,color } = useCustomContext();

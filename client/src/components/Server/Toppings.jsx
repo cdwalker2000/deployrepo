@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import Ingredient from '../Ingredient'
+import Ingredient from './Ingredient'
 
 // Panels
 const Toppings = (props) => {
@@ -33,7 +33,7 @@ const Toppings = (props) => {
         <Panel className="w-[48%] h-full" title="Toppings">
             {
                 toppings.map((item, index) => (
-                    <Ingredient key={"topping_" + item.ingredient_name} label={item.ingredient_name} onClick={() => addIngredient(item, "topping")} />
+                    <Ingredient key={"topping_" + item.ingredient_name} label={item.ingredient_name} onClick={() => addIngredient(item, "topping")} category={"topping"} />
                 ))
             }
         </Panel>
