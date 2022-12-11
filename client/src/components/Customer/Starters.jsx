@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Dish from '../Customer/Dish'
+import { message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 // Panels
 const Starters = (props) => {
@@ -7,6 +9,8 @@ const Starters = (props) => {
 
 
     const [starters, setStarters] = useState([])
+
+    const navigate = useNavigate(); //use navigate to jump
 
     useEffect(() => {
         fetchStarters();
@@ -24,6 +28,7 @@ const Starters = (props) => {
     const addStarter = async (item) => {    
         // BLOCK ANY INGREDIENTS --> NEED TO IMMEDIATELY ADD THE DISH INSTEAD OF CLICKING ANY TOPPINGS
         // JC : popup/green check at top on Customer 1 after pressing this (since we don't go to a new page, need feedback)
+        message.success('A Combo Has Been Selected and Added To Cart');
 
         console.log("addStarter sends request");
         
@@ -38,12 +43,15 @@ const Starters = (props) => {
         console.log("addStarter got response");
 
         // JC : NAVIGATE BACK TO CUSTOMER 1 (or stay on the same page in this case)
+        
 
         console.log("finalizeDish sends request");
+        
     
         await fetch('http://localhost:8080/finalize')
 
         console.log("finalizeDish got response");
+        navigate('/customer1')
         
     }
 

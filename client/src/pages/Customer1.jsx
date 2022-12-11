@@ -9,6 +9,7 @@ import ModalC from '../components/Modal';
 import Cart from '../components/Customer/Cart';
 import Mains from '../components/Customer/Mains';
 import Starters from '../components/Customer/Starters';
+import { useNavigate } from 'react-router-dom'
 
 
 const Panel = ({ children, title, className }) => {
@@ -23,6 +24,7 @@ const Panel = ({ children, title, className }) => {
 const Customer1 = () => {
     
     const [visible, setVisible] = useState(false); //control modal view
+    const navigate = useNavigate();
     
     // modal footer button group
     const customerFooter = [
@@ -60,15 +62,22 @@ const Customer1 = () => {
                 <Mains />
                 <Starters currentDish={currentDish} setCurrentDish={setCurrentDish} />
             </div>
+            <div className="flex px-[50px] mt-[20px]">
+                <div style={{marginRight: '20px'}}>
+                    <Button type="danger" className="relative bottom-[10px]" onClick={() => navigate('/')}>Log Off</Button>
+                </div>
+            </div>
             <ModalC
                 close={() => setVisible(false)}
                 visible={visible}
-                title="Add Ons"
+                title="Current Order & Check Out"
             >
                     <Cart></Cart>
             
             </ModalC>
+
         </div>
+        
     )
 }
 

@@ -29,6 +29,17 @@ const Login = () => {
     const toHome = () => {
         navigate('/')
     }
+    const toCus = () => {
+        navigate('/customer1')
+    }
+
+    const toMap = () => {
+        navigate('/maps')
+    }
+    const toACC = () => {
+        navigate('/acc')
+    }
+
     return (
         <div 
         className="w-[100vw] relative h-[100vh] flex items-center justify-around bg-gray-200"
@@ -52,12 +63,20 @@ const Login = () => {
                 <br/>
                 <br/>
                 <Button block type="primary">Login</Button>
-                <br/>
-                <br/>
+                
                 <div className="flex items-center justify-between">
-                    <Button onClick={toHome} type="danger">Cancel</Button>
-                    <Button type="primary" onClick={() => setVisible(true)}>Sign Up</Button>
+                    {/* <Button onClick={toHome} type="danger">Cancel</Button> */}
+                    {/* <Button type="primary" onClick={() => setVisible(true)}>Sign Up</Button> */}
                 </div> 
+                <br/>
+                <Button type="gogo" onClick={() => setVisible(true)}>Sign Up</Button>
+                <br/>
+                <Button onClick={toCus} type="warning">Continue as Guest</Button>
+                <br/>
+                <Button block type="green" onClick={toACC}>Accessabilities</Button>
+                <br/>
+                <Button block type="pop" onClick={toMap}>Google Map</Button>
+                <br/>
                 <div style={{fontSize: size}}
                 className="flex items-center mt-[20px]"><span>Login with</span> <span className="cursor-pointer text-red-500 ml-[10px]">Google</span></div>
             </div>
