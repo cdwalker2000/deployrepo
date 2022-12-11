@@ -1,10 +1,17 @@
 import React,{useRef} from 'react'
 import { useCustomContext } from '../../Context/Provider';
-import menu from '../../assets/menu.webp'
+//import menu from '../../assets/images/pita.png'
+
+
 
 // buttons
 const Dish = (props) => {
     const { dish_name, dish_price, onClick, round,className,type,block} = props;
+   // let imageName = '../../assets/menu.webp'
+    let image = require('../../assets/menu.webp')
+    if (dish_name != null) {
+        image = require('../../assets/images/' + dish_name.replaceAll(" ", "-") + ".webp")
+    }
     // styles
     // use the useRef hook to get the button dom instance
     const cur = useRef();
@@ -38,12 +45,13 @@ const Dish = (props) => {
         if(block) {
             extraClasses += ' ' + 'w-full'
         }
+        //console.log('../../assets/images/' + imageName)
         return ' ' + 'px-[15px] h-[40px] text-white hover:opacity-75 shadow-lg leading-[40px] text-center bg-blue-500 cursor-pointer ' + extraClasses
     }
     return (
         <div className="flex items-center justify-between mb-[12px]">
             <div className="w-[100px] h-[100px] rounded-[4px] overflow-hidden">
-                <img className="w-full h-full" src={menu} />
+                <img className="w-full h-full" src={image} />
             </div>
             <div 
             ref={cur}
