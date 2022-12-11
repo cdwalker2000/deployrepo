@@ -11,8 +11,9 @@ const SearchMenu = () => {
     const [menu, setMenu] = useState([])
 
 
-    const handleInputChange = event => {
+    const handleInputChange = (event) => {
         const { id, value } = event.target
+        console.log("'" + id + "': '" + value + "'")
         setInput({ ...input, [id]: value })
     }
 

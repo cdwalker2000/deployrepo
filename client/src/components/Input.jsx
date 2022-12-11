@@ -20,7 +20,7 @@ const Input = (props) => {
     return (
         <div className={`mb-[12px] items-center relative ${size>20? '' :'flex  h-[40px] '}`}>
             <div className={`text-left mr-[7px] ${size>20? 'w-full ': 'min-w-[180px]'}`}>{label}:</div>
-            <input type={getType()} className={baseClasses()} value={value} onChange={e => handleInputChange(e)}/>
+            <input id={id} type={getType()} className={baseClasses()} value={value} onChange={e => handleInputChange(e)}/>
             {/* <input type={visible? 'text': 'password'} className={baseClasses()} value={value} onChange={e => onChange(e)}/> */}
             {/* {getType() == 'password' &&  <div className="absolute right-[10px] top-[50%] translate-y-[-50%]" onClick={() => setVisible(!visible)}>
                 { visible? <HiEye size={20} color="gray"/>: <HiEyeOff size={20} color="gray"/> }
