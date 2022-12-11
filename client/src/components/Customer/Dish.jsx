@@ -5,6 +5,10 @@ import menu from '../../assets/menu.webp'
 // buttons
 const Dish = (props) => {
     const { dish_name, dish_price, onClick, round,className,type,block} = props;
+    let image = require('../../assets/menu.webp')
+    if (dish_name != null) {
+        image = require('../../assets/images/' + dish_name.replaceAll(" ", "-") + ".webp")
+    }
     // styles
     // use the useRef hook to get the button dom instance
     const cur = useRef();
@@ -43,7 +47,7 @@ const Dish = (props) => {
     return (
         <div className="flex items-center justify-between mb-[12px]">
             <div className="w-[100px] h-[100px] rounded-[4px] overflow-hidden">
-                <img className="w-full h-full" src={menu} />
+                <img className="w-full h-full" src={image} />
             </div>
             <div 
             ref={cur}

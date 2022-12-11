@@ -5,6 +5,10 @@ import menu from '../../assets/menu.webp'
 // buttons
 const Ingredient = (props) => {
     const { label, onClick, round,className,type,block} = props;
+    let image = require('../../assets/images/meatballs.webp')
+    if (label != null) {
+        image = require('../../assets/images/' + label.replaceAll(" ", "-") + ".webp")
+    }
     // use the useRef hook to get the button dom instance
     const cur = useRef();
     // import property from context
@@ -45,7 +49,7 @@ const Ingredient = (props) => {
         
             <div className="flex flex-col h-[270px] mr-[20px] items-center justify-between mb-[12px]">
                 <div className="w-[100px] h-[100px] rounded-[4px] overflow-hidden">
-                    <img className="w-full h-full" src={menu} />
+                    <img className="w-full h-full" src={image} />
                 </div>
                 <div 
                 ref={cur}
