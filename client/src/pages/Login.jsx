@@ -7,6 +7,7 @@ import {HiOutlineVolumeUp} from 'react-icons/hi'
 import { useNavigate } from 'react-router-dom';
 import {useCustomContext} from '../Context/Provider'
 import logo from '../assets/logo.png'
+import { message } from 'antd';
 
 const Login = () => {
     const { size,color } = useCustomContext();
@@ -45,6 +46,7 @@ const Login = () => {
         if (users.length == 0) {
             
             // JC : ADD POPUP SAYING UNSUCCESSFUL LOGIN ATTEMPT
+            message.error('Unsuccessful Attempt');
 
             console.log("Not a valid user")
             setUser({username: '', password: ''})
