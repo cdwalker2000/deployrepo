@@ -62,7 +62,6 @@ const Server = () => {
             .catch(e => console.log(e))
     }
 
-    const navigate = useNavigate();
     const { size,color } = useCustomContext();
     
     

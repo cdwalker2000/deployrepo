@@ -58,13 +58,14 @@ const ChangePassword = (props) => {
 
     return (
         <Panel className="h-[100%]" title="User Settings">
-            <div className="flex justify-between">
-                <Button onClick={changePassword}>Change Password</Button>
-                <Button onClick={logOut} type="danger">Log Off</Button>
-            </div>
+            
             <div className="mt-[20px]">
                 <Input id="old_password" type="password" label="Old Password" handleInputChange={handleChangeCurrentServer} value={currentServer.old_password}/>
                 <Input id="updated_password" type="password" label="New Password" handleInputChange={handleChangeCurrentServer} value={currentServer.updated_password}/>
+            </div>
+            <div className="flex justify-between">
+                <Button onClick={changePassword}>Change Password</Button>
+                {/* <Button visible={false} onClick={logOut} type="danger">Log Off</Button> */}
             </div>
         </Panel>
     )

@@ -43,7 +43,11 @@ const Login = () => {
 
     const checkCredentials = (users) => {
         if (users.length == 0) {
+            
+            // JC : ADD POPUP SAYING UNSUCCESSFUL LOGIN ATTEMPT
+
             console.log("Not a valid user")
+            setUser({username: '', password: ''})
         }
         else {
             navigateToPages(users[0].username, users[0].role)
@@ -56,7 +60,7 @@ const Login = () => {
                 navigate("/server/" + username);
                 break;
             case "manager":
-                navigate("/manager");
+                navigate("/manager/" + username);
                 break;
         }
     }
@@ -107,10 +111,11 @@ const Login = () => {
                     {/* <Button type="primary" onClick={() => setVisible(true)}>Sign Up</Button> */}
                 </div> 
                 <br/>
-                <Button type="gogo" onClick={() => setVisible(true)}>Sign Up</Button>
+                <Button onClick={toCus} type="warning">Continue as Customer</Button>
                 <br/>
-                <Button onClick={toCus} type="warning">Continue as Guest</Button>
-                <br/>
+                {/* <Button type="gogo" onClick={() => setVisible(true)}>Sign Up</Button>
+                <br/> */}
+                
                 <Button block type="green" onClick={toACC}>Accessibilities</Button>
                 <br/>
                 <Button block type="pop" onClick={toMap}>Google Map</Button>

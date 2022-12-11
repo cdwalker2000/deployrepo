@@ -25,7 +25,7 @@ function App() {
             <Route path="/customer1" element={<Customer1/>}/>
             <Route path="/customer2" element={<Customer2/>}/>
             <Route path ="/maps" element = {<Maps/>}/>
-            <Route path ="/manager" element = {<Manager/>}/>
+            <Route path ="/manager/:username" element = {<Manager/>}/>
             <Route path ="/recordRestock" element = {<RecordRestock/>}/>
             <Route path ="/excessReport" element = {<ExcessReport/>}/>
             <Route path ="/restockReport" element = {<RestockReport/>}/>

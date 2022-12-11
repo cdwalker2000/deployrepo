@@ -19,13 +19,31 @@ const NavBar = (props) => {
     
     const navigate = useNavigate();
 
+    const cancelOrder = async () => {        
+        console.log("clearCart sends response");
+        
+        const response = await fetch('http://localhost:8080/clear_cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: "",
+        })
+        console.log("clearCart got response");
+    }
+
+    const logOut = () => {
+        cancelOrder();
+        navigate('/');
+    }
+
     return (
         <div className="px-[50px] fixed left-0 top-0 h-[70px] z-[999] flex justify-between items-center w-full bg-white">
             <div className="flex items-center">
                 <Avatar uri={defaultAvatar}/>
                 <div className="font-bold text-gray-500 ml-[12px]">{ currentUser.fname + " " + currentUser.lname }</div>
             </div>
-            {/* <Button onClick={() => navigate('login')}>LOG IN</Button> */}
+            <Button onClick={logOut} type="danger">Log Off</Button>
         </div>
     )
 }

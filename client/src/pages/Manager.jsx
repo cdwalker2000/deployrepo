@@ -1,15 +1,39 @@
 import React, { useState, useEffect } from 'react'
+import NavBar from '../components/NavBar'
 import Panel from '../components/Panel2'
 import Button from '../components/Button'
 import CheckInventory from '../components/CheckInventory'
 import SearchMenu from '../components/SearchMenu'
 import ChangeMenu from '../components/ChangeMenu'
 import { HiOutlineVolumeUp } from 'react-icons/hi'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 
 const Manager = () => {
+
+    const { username } = useParams();
+
+    const initialCurrentUser = {"fname": '', "lname": '', "password": '', "role": '', "user_id": -1, "username": ''}
+    const [currentUser, setCurrentUser] = useState(initialCurrentUser);
+
+    useEffect(() => {
+        fetchCurrentUser();
+    }, [])
+
+    const fetchCurrentUser = async () => {
+        const response = await fetch(`http://localhost:8080/user_info`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"username": username}),
+        });
+        response
+            .json()
+            .then(response => setCurrentUser(response[0]))
+            .catch(e => console.log(e))
+    }
 
     // navigation
     const navigate = useNavigate();
@@ -35,6 +59,7 @@ const Manager = () => {
 
     return (
         <>
+            <NavBar currentUser={currentUser} />
             <div className={'w-[200px] mb-[20px] mt-[20px] h-full flex flex-col justify-between ml-[25px]'}>
                     <Button type="danger">Log Off</Button>
             </div>
