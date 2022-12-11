@@ -7,6 +7,10 @@ const CartItem = (props) => {
     // styles
     const children = [item.protein_name, item.ingr1_name, item.ingr2_name, item.ingr3_name, item.ingr4_name, item.sauce_name];
 
+    if (item.have_drink == 1) {
+        children.push("drink");
+    }
+
     return (
         <div className="mb-[20px]">
             <div className="flex font-bold text-xl justify-between items-center">

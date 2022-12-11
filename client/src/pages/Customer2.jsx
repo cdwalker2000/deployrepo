@@ -24,20 +24,8 @@ const Panel = ({ children, title, className }) => {
     )
 }
 
-const Customer2 = (props) => {
-    const {setCurrentDish, currentDish} = props
-    const menuList = [
-        {
-            name: 'pita',
-            children: ["falafel", "diced cucumbers", "tomato-onion salad", "roasted cauliflower", "roasted peppers", "tzatziki", "No Drink",],
-            price: 7.69
-        },
-        {
-            name: 'salad',
-            children: ["falafel", "diced cucumbers", "tomato-onion salad", "roasted cauliflower", "roasted peppers", "tzatziki", "No Drink",],
-            price: 7.69
-        }
-    ]
+const Customer2 = () => {
+    
     const [visible, setVisible] = useState(false); //control modal view
     // modal footer button group
     const customerFooter = [
@@ -56,43 +44,57 @@ const Customer2 = (props) => {
             confirm
         </AButton>,
     ]
-    const mainList =
-        [{ name: "grain bowl", price: '7.79' },
-        { name: "salad", price: '7.69' },
-        { name: "greens and grains", price: '7.69' },
-        { name: "combo with drink", price: '8.99' },
-        { name: "combo with fries and drink", price: '8.99' },
-        { name: "pita", price: '7.69' }]
 
         const [ingrCount, setIngrCount] = useState(0)
     
     
-        const addIngredient = (item, category) => {
+        const addIngredient = async (item, category) => {
             let colname = "";
-            let canAddIngredient = true;
             if (category == "protein") {
                 colname = "protein_name";
             }
             if (category == "topping") {
-                if (ingrCount < 4) {
-                    colname = "ingr" + (ingrCount+1) + "_name";
-                    setIngrCount(ingrCount + 1);
-                }
-                else {
-                    canAddIngredient =  false;
-                }
+                let new_count = ((ingrCount) % 4 + 1);
+                colname = "ingr" + new_count + "_name";
+                setIngrCount(new_count);
             }
             if (category == "sauce") {
                 colname = "sauce_name";
             }
-            if (canAddIngredient) {
-                console.log(colname);
-                setCurrentDish({ ...currentDish, [colname]: item.ingredient_name });
-            }
-            else {
-                console.log("Can't add ingredient");
-            }
+
+            console.log(colname);
+            console.log("addIngredient sends request");
+        
+            const response = await fetch('http://localhost:8080/add_ingr', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({"col_name": colname, "ingredient_name": item.ingredient_name}),
+            })
+
+            console.log("addIngredient got response");
         }
+
+        const addDrink = async () => {
+            console.log("addDrink sends request");
+        
+            const response = await fetch('http://localhost:8080/add_drink')
+
+            console.log("addDrink got response");
+        }
+
+        const finalizeDish = async () => {
+
+            // JC : NAVIGATE BACK TO CUSTOMER 1
+
+            console.log("finalizeDish sends request");
+        
+            const response = await fetch('http://localhost:8080/finalize')
+
+            console.log("finalizeDish got response");
+        }
+
     
     return (
         <div>
@@ -150,8 +152,8 @@ const Customer2 = (props) => {
             </div>
             <div className="flex justify-around px-[60px] mt-[20px]">
                 <div className="flex">
-                <Button className="mr-[20px]">Add drink</Button>
-                <Button className="mr-[20px]">Add to Cart</Button>
+                <Button className="mr-[20px]" onClick={addDrink}>Add Drink</Button>
+                <Button className="mr-[20px]" onClick={finalizeDish}>Add to Cart</Button>
                 </div>
             </div>
             <ModalC
