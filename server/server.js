@@ -25,6 +25,12 @@ app.get('/', (request, response) => {
   response.json({ info: 'Node.js, Express, and Postgres API' })
 })
 
+// Log In
+app.post('/credentials', db.getCredentials)
+app.post('/user_info', db.getUserInfo)
+
+
+
 // Server
 
 app.post('/change_password', db.changePassword)

@@ -4,7 +4,7 @@ import Input from '../components/Input'
 import { HiOutlineVolumeUp } from 'react-icons/hi'
 import NavBar from '../components/NavBar'
 import { useCustomContext } from '../Context/Provider'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import menu from '../assets/menu.webp'
 import Mains from '../components/Server/Mains'
 import Starters from '../components/Server/Starters'
@@ -38,7 +38,30 @@ const Panel = ({ children, title, className }) => {
 }
 
 // the page include display info
-const Home = () => {
+const Server = () => {
+    const { username } = useParams();
+
+    const initialCurrentUser = {"fname": '', "lname": '', "password": '', "role": '', "user_id": -1, "username": ''}
+    const [currentUser, setCurrentUser] = useState(initialCurrentUser);
+
+    useEffect(() => {
+        fetchCurrentUser();
+    }, [])
+
+    const fetchCurrentUser = async () => {
+        const response = await fetch(`http://localhost:8080/user_info`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"username": username}),
+        });
+        response
+            .json()
+            .then(response => setCurrentUser(response[0]))
+            .catch(e => console.log(e))
+    }
+
     const navigate = useNavigate();
     const { size,color } = useCustomContext();
     
@@ -46,7 +69,7 @@ const Home = () => {
     const { user, handleChange } = useCustomContext();
 
 
-    const initialCurrentDish = {"dishname": "", "proteinname": "", "ingr1name": "", "ingr2name": "", "ingr3name": "", "ingr4name": "", "saucename": "", "have_drink": -1, "total_cost": -1.11}
+    const initialCurrentDish = {"dish_name": "", "protein_name": "", "ingr1_name": "", "ingr2_name": "", "ingr3_name": "", "ingr4_name": "", "sauce_name": "", "have_drink": -1, "total_cost": -1.11}
     const [currentDish, setCurrentDish] = useState(initialCurrentDish)
 
     const [ingrCount, setIngrCount] = useState(0)
@@ -82,7 +105,7 @@ const Home = () => {
     return (
 
         <div style={{color: color,fontSize: size}}>
-            <NavBar />
+            <NavBar currentUser={currentUser}/>
             <div className="flex flex-col md:flex-row h-[600px] relative mt-[90px] px-[50px]">
                 <div className="absolute h-[70px] w-[70px] right-[50px] top-[0px] rounded-full flex items-center justify-around bg-blue-500 hover:opacity-50 shadow-md">
                     <HiOutlineVolumeUp size={30} color="white" />
@@ -111,7 +134,7 @@ const Home = () => {
                             <Input type="password" label="New Password" />
                         </div>
                     </Panel> */}
-                    <ChangePassword/>
+                    <ChangePassword username={currentUser.username} />
                 </div>
             </div>
             <div className="flex flex-col px-[50px] md:flex-row justify-between h-[800px] mt-[50px] pb-[50px] relative">
@@ -164,10 +187,10 @@ const Home = () => {
                         <Sauces addIngredient={addIngredient} />
                     </div>
                 </div>
-                <Button className="absolute bottom-[10px] right-[10px]">View Order</Button>
+                {/* <Button className="absolute bottom-[10px] right-[10px]">View Order</Button> */}
             </div>
         </div>
     )
 }
 
-export default Home
+export default Server

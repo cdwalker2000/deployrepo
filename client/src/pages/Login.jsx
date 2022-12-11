@@ -23,6 +23,44 @@ const Login = () => {
         setUser(prev => ({...prev,[name]: v}))
     }
 
+    const logIn = async () => {
+        console.log("logIn sends request");
+        
+        const response = await fetch(`http://localhost:8080/credentials`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user),
+        });
+        response
+            .json()
+            .then(response => checkCredentials(response))
+            .catch(e => console.log(e))
+        
+        console.log("logIn gets response");
+    }
+
+    const checkCredentials = (users) => {
+        if (users.length == 0) {
+            console.log("Not a valid user")
+        }
+        else {
+            navigateToPages(users[0].username, users[0].role)
+        }
+    }
+
+    const navigateToPages = (username, role) => {
+        switch (role) {
+            case "server":
+                navigate("/server/" + username);
+                break;
+            case "manager":
+                navigate("/manager");
+                break;
+        }
+    }
+
     // navigate
     const navigate = useNavigate();
     // go to landing page when called
@@ -62,7 +100,7 @@ const Login = () => {
                 />
                 <br/>
                 <br/>
-                <Button block type="primary">Login</Button>
+                <Button block type="primary" onClick={logIn} >Login</Button>
                 
                 <div className="flex items-center justify-between">
                     {/* <Button onClick={toHome} type="danger">Cancel</Button> */}
@@ -73,7 +111,7 @@ const Login = () => {
                 <br/>
                 <Button onClick={toCus} type="warning">Continue as Guest</Button>
                 <br/>
-                <Button block type="green" onClick={toACC}>Accessabilities</Button>
+                <Button block type="green" onClick={toACC}>Accessibilities</Button>
                 <br/>
                 <Button block type="pop" onClick={toMap}>Google Map</Button>
                 <br/>

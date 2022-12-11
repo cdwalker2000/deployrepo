@@ -14,19 +14,16 @@ const Avatar = ({uri}) => {
 }
 
 // nav bar infomation
-const NavBar = () => {
+const NavBar = (props) => {
+    const { currentUser } = props
+    
     const navigate = useNavigate();
-    // user info include first and last name
-    const [user,setUser] = useState({
-        firstName: 'FirstName',
-        lastName: 'LastName'
-    })
+
     return (
         <div className="px-[50px] fixed left-0 top-0 h-[70px] z-[999] flex justify-between items-center w-full bg-white">
             <div className="flex items-center">
                 <Avatar uri={defaultAvatar}/>
-                <div className="font-bold text-gray-500 ml-[12px]">{ user.firstName }</div>
-                <div className="font-bold text-gray-500 ml-[12px]">{ user.lastName }</div>
+                <div className="font-bold text-gray-500 ml-[12px]">{ currentUser.fname + " " + currentUser.lname }</div>
             </div>
             {/* <Button onClick={() => navigate('login')}>LOG IN</Button> */}
         </div>

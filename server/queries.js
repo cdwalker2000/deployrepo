@@ -15,20 +15,47 @@ const pool = new Pool({
   ssl: {rejectUnauthorized: false}
 });
 
+
+// Get credentials from log in attempt
+
+const getCredentials = (request, response) => {
+  const { username, password } = request.body
+
+  pool.query('SELECT * FROM users WHERE username = $1 AND password = $2;', [username, password], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+
+// Get user info by ID
+
+const getUserInfo = (request, response) => {
+  const { username } = request.body
+
+  pool.query('SELECT * FROM users WHERE username = $1;', [username], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+
+
 // Our first endpoint will be a GET request. 
 // Inside the pool.query() we can put the raw SQL that will touch the api database. 
 // We’ll SELECT all users and order by id.
 
 const getOrders = (request, response) => {
-  console.log("Got here2");
-  pool.query('SELECT * FROM orders LIMIT(5)', (error, results) => {
+  pool.query('SELECT * FROM orders LIMIT(5);', (error, results) => {
     if (error) {
       throw error
     }
     response.status(200).json(results.rows)
-    console.log(results.rows)
   })
-  console.log("ASDASDAS");
 }
 
 // 
@@ -568,6 +595,8 @@ const bestComboSales = (request, response) => {
 
 
   module.exports = {
+    getCredentials,
+    getUserInfo,
     getOrders,
     changePassword,
     getCart,
