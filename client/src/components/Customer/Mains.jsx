@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import Dish from './Dish'
+import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 
 // Panels
 const Mains = (props) => {
     const { currentDish, setCurrentDish } = props
 
     const [mains,setMains] = useState([])
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchMains();
@@ -33,6 +36,10 @@ const Mains = (props) => {
         })
 
         console.log("addMain got response");
+        // mark the click 
+        message.success('Entree has selected');
+        // navigate to customer 2
+        navigate('/customer2');
     }
 
     const Panel = ({ children, title, className }) => {

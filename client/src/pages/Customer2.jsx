@@ -10,6 +10,8 @@ import Proteins from '../components/Customer/Proteins';
 import Toppings from '../components/Customer/Toppings';
 import Sauces from '../components/Customer/Sauces';
 import Cart from '../components/Customer/Cart';
+import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 
 
 
@@ -27,6 +29,7 @@ const Panel = ({ children, title, className }) => {
 const Customer2 = () => {
     
     const [visible, setVisible] = useState(false); //control modal view
+    const navigate = useNavigate(); //use navigate to jump
     // modal footer button group
     const customerFooter = [
         <AButton key="back">
@@ -52,14 +55,17 @@ const Customer2 = () => {
             let colname = "";
             if (category == "protein") {
                 colname = "protein_name";
+                message.success('Protein Added');
             }
             if (category == "topping") {
                 let new_count = ((ingrCount) % 4 + 1);
                 colname = "ingr" + new_count + "_name";
                 setIngrCount(new_count);
+                message.success('Topping Added');
             }
             if (category == "sauce") {
                 colname = "sauce_name";
+                message.success('Sauces Added')
             }
 
             console.log(colname);
@@ -82,11 +88,16 @@ const Customer2 = () => {
             const response = await fetch('http://localhost:8080/add_drink')
 
             console.log("addDrink got response");
+
+            message.success('Drink Added')
         }
 
         const finalizeDish = async () => {
 
             // JC : NAVIGATE BACK TO CUSTOMER 1
+            navigate('/customer1');
+            message.success('Items Added To Cart');
+
 
             console.log("finalizeDish sends request");
         
