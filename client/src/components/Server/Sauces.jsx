@@ -13,7 +13,7 @@ const Sauces = (props) => {
     }, [])
 
     const fetchSauces = async () => {
-        const result = await fetch(`http://localhost:8080/sauces`)      // change to final deployment site
+        const result = await fetch(`https://pom-and-honey-server.onrender.com/sauces`)
         result
             .json()
             .then(result => setSauces(result))

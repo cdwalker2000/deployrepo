@@ -15,7 +15,7 @@ const Mains = (props) => {
     }, [])
 
     const fetchMains = async () => {
-        const result = await fetch(`http://localhost:8080/mains`)      // change to final deployment site
+        const result = await fetch(`https://pom-and-honey-server.onrender.com/mains`)
         result
             .json()
             .then(result => setMains(result))
@@ -27,7 +27,7 @@ const Mains = (props) => {
         
         console.log("addMain sends request");
         
-        const response = await fetch('http://localhost:8080/add_dish', {
+        const response = await fetch('https://pom-and-honey-server.onrender.com/add_dish', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -13,7 +13,7 @@ const Cart = (props) => {
     }, [])
     
     const fetchCart = async () => {
-        const result = await fetch(`http://localhost:8080/cart`)      // change to final deployment site
+        const result = await fetch(`https://pom-and-honey-server.onrender.com/cart`)      // change to final deployment site
         result
             .json()
             .then(result => setCart(result))
@@ -63,7 +63,7 @@ const Cart = (props) => {
     const deleteLastDish = async (event) => {
         console.log("deleteLastDish sends request");
 
-        const response = await fetch('http://localhost:8080/delete_last_dish', {
+        const response = await fetch('https://pom-and-honey-server.onrender.com/delete_last_dish', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ const Cart = (props) => {
         
         console.log("addDishToCart sends request");
         
-        const response = await fetch('http://localhost:8080/add_dish_to_cart', {
+        const response = await fetch('https://pom-and-honey-server.onrender.com/add_dish_to_cart', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ const Cart = (props) => {
         
         console.log("clearCart sends response");
         
-        const response = await fetch('http://localhost:8080/clear_cart', {
+        const response = await fetch('https://pom-and-honey-server.onrender.com/clear_cart', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ const Cart = (props) => {
     }
 
     const updateInventory = async (ingredient_name, num_servings) => {
-        await fetch('http://localhost:8080/update_inventory', {
+        await fetch('https://pom-and-honey-server.onrender.com/update_inventory', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -125,7 +125,7 @@ const Cart = (props) => {
     }
 
     const nextOrderID = async (cart_item) => {
-        const response = await fetch('http://localhost:8080/next_order_id')
+        const response = await fetch('https://pom-and-honey-server.onrender.com/next_order_id')
         response
             .json()
             .then((response) => pushCartToOrders(cart_item, response[0].order_id))
@@ -133,7 +133,7 @@ const Cart = (props) => {
 
     const pushCartToOrders = async (cart_item, order_id) => {
         cart_item.order_id = order_id;
-        await fetch('http://localhost:8080/push_cart_item', {
+        await fetch('https://pom-and-honey-server.onrender.com/push_cart_item', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -167,7 +167,7 @@ const Cart = (props) => {
 
         
         console.log("clearCart sends response");
-        await fetch('http://localhost:8080/clear_cart', {
+        await fetch('https://pom-and-honey-server.onrender.com/clear_cart', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

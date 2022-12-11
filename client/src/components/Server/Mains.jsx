@@ -12,7 +12,7 @@ const Mains = (props) => {
     }, [])
 
     const fetchMains = async () => {
-        const result = await fetch(`http://localhost:8080/mains`)      // change to final deployment site
+        const result = await fetch(`https://pom-and-honey-server.onrender.com/mains`)      // change to final deployment site
         result
             .json()
             .then(result => setMains(result))

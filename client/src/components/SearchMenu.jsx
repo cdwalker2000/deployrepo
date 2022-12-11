@@ -22,7 +22,7 @@ const SearchMenu = () => {
 
         console.log("getMenu sends request");
         
-        const response = await fetch(`http://localhost:8080/menu`, {
+        const response = await fetch(`https://pom-and-honey-server.onrender.com/menu`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

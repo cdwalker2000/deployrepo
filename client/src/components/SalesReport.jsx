@@ -34,7 +34,7 @@ const SalesReport = () => {
             inputs.s_end_date = getDateTime();
         }
         
-        const response = await fetch(`http://localhost:8080/sales_report`, {
+        const response = await fetch(`https://pom-and-honey-server.onrender.com/sales_report`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

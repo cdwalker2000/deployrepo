@@ -12,7 +12,7 @@ const Toppings = (props) => {
     }, [])
 
     const fetchToppings = async () => {
-        const result = await fetch(`http://localhost:8080/toppings`)      // change to final deployment site
+        const result = await fetch(`https://pom-and-honey-server.onrender.com/toppings`)
         result
             .json()
             .then(result => setToppings(result))

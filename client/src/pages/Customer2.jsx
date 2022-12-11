@@ -71,7 +71,7 @@ const Customer2 = () => {
             console.log(colname);
             console.log("addIngredient sends request");
         
-            const response = await fetch('http://localhost:8080/add_ingr', {
+            const response = await fetch('https://pom-and-honey-server.onrender.com/add_ingr', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ const Customer2 = () => {
         const addDrink = async () => {
             console.log("addDrink sends request");
         
-            const response = await fetch('http://localhost:8080/add_drink')
+            const response = await fetch('https://pom-and-honey-server.onrender.com/add_drink')
 
             console.log("addDrink got response");
 
@@ -101,7 +101,7 @@ const Customer2 = () => {
 
             console.log("finalizeDish sends request");
         
-            const response = await fetch('http://localhost:8080/finalize')
+            const response = await fetch('https://pom-and-honey-server.onrender.com/finalize')
 
             console.log("finalizeDish got response");
         }

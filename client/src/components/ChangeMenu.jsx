@@ -20,14 +20,14 @@ const ChangeMenu = () => {
 
         console.log("addDish sends requests");
         
-        await fetch(`http://localhost:8080/add_new_dish`, {
+        await fetch(`https://pom-and-honey-server.onrender.com/add_new_dish`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(dish),
         });
-        await fetch(`http://localhost:8080/add_new_inventory`, {
+        await fetch(`https://pom-and-honey-server.onrender.com/add_new_inventory`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ const ChangeMenu = () => {
 
         console.log("updateDish sends request");
         
-        await fetch(`http://localhost:8080/update_dish`, {
+        await fetch(`https://pom-and-honey-server.onrender.com/update_dish`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ const ChangeMenu = () => {
 
         console.log("removeDish sends request");
         
-        await fetch(`http://localhost:8080/remove_dish`, {
+        await fetch(`https://pom-and-honey-server.onrender.com/remove_dish`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

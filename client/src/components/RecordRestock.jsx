@@ -21,7 +21,7 @@ const RecordRestock = () => {
 
         // updateRestockTime();
         
-        await fetch(`http://localhost:8080/restock`, {
+        await fetch(`https://pom-and-honey-server.onrender.com/restock`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ const RecordRestock = () => {
             body: JSON.stringify(restock),
         });
 
-        await fetch(`http://localhost:8080/update_inventory`, {
+        await fetch(`https://pom-and-honey-server.onrender.com/update_inventory`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

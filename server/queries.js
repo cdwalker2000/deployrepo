@@ -63,7 +63,7 @@ const getOrders = (request, response) => {
 const changePassword = (request, response) => {
   const { username, old_password, updated_password } = request.body
 
-  console.log(username, old_password, updated_password );
+  console.log("UPDATE users SET password = " + updated_password + " WHERE username = " + username + ";");
 
   pool.query("UPDATE users SET password = $1 WHERE username = $2;", [updated_password, username], (error, results) => {
     if (error) {

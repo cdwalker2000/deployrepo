@@ -27,13 +27,13 @@ const ComboReport = () => {
         let url = "";
         switch (inputs.c_category1) {
             case "protein":
-                url = `http://localhost:8080/proteins`;
+                url = `https://pom-and-honey-server.onrender.com/proteins`;
                 break;
             case "topping":
-                url = `http://localhost:8080/toppings`;
+                url = `https://pom-and-honey-server.onrender.com/toppings`;
                 break;
             case "sauce":
-                url = `http://localhost:8080/sauces`;
+                url = `https://pom-and-honey-server.onrender.com/sauces`;
                 break;
         }
         const result = await fetch(url)      // change to final deployment site
@@ -49,13 +49,13 @@ const ComboReport = () => {
         let url = "";
         switch (inputs.c_category2) {
             case "protein":
-                url = `http://localhost:8080/proteins`;
+                url = `https://pom-and-honey-server.onrender.com/proteins`;
                 break;
             case "topping":
-                url = `http://localhost:8080/toppings`;
+                url = `https://pom-and-honey-server.onrender.com/toppings`;
                 break;
             case "sauce":
-                url = `http://localhost:8080/sauces`;
+                url = `https://pom-and-honey-server.onrender.com/sauces`;
                 break;
         }
         const result = await fetch(url)      // change to final deployment site
@@ -75,7 +75,7 @@ const ComboReport = () => {
                 let c1Condition = makeCondition(inputs.c_category1, c1Entry)
                 let c2Condition = makeCondition(inputs.c_category2, c2Entry)
                 let input = {"c1Condition" : c1Condition, "c2Condition" : c2Condition}
-                const response = await fetch(`http://localhost:8080/combo_sales`, {
+                const response = await fetch(`https://pom-and-honey-server.onrender.com/combo_sales`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

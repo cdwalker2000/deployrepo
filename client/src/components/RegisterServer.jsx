@@ -20,7 +20,7 @@ const RegisterCustomer = () => {
 
         console.log("addEmployee sends request");
         
-        const response = await fetch(`http://localhost:8080/new_user`, {
+        const response = await fetch(`https://pom-and-honey-server.onrender.com/new_user`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

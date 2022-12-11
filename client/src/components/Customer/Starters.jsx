@@ -17,7 +17,7 @@ const Starters = (props) => {
     }, [])
 
     const fetchStarters = async () => {
-        const result = await fetch(`http://localhost:8080/starters`)      // change to final deployment site
+        const result = await fetch(`https://pom-and-honey-server.onrender.com/starters`)
         result
             .json()
             .then(result => setStarters(result))
@@ -32,7 +32,7 @@ const Starters = (props) => {
 
         console.log("addStarter sends request");
         
-        await fetch('http://localhost:8080/add_dish', {
+        await fetch('https://pom-and-honey-server.onrender.com/add_dish', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ const Starters = (props) => {
         console.log("finalizeDish sends request");
         
     
-        await fetch('http://localhost:8080/finalize')
+        await fetch('https://pom-and-honey-server.onrender.com/finalize')
 
         console.log("finalizeDish got response");
         navigate('/customer1')

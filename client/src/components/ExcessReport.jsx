@@ -25,7 +25,7 @@ const ExcessReport = () => {
 
         console.log("getExcessReport sends requests");        
 
-        const response = await fetch(`http://localhost:8080/ingredients`)
+        const response = await fetch(`https://pom-and-honey-server.onrender.com/ingredients`)
         response
             .json()
             .then(response => processIngredients(response))
@@ -48,7 +48,7 @@ const ExcessReport = () => {
         }
 
         if (ingredient.category == 'protein') {
-            const response = await fetch(`http://localhost:8080/sales_protein`, {
+            const response = await fetch(`https://pom-and-honey-server.onrender.com/sales_protein`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ const ExcessReport = () => {
         }
 
         if (ingredient.category == 'sauce') {
-            const response = await fetch(`http://localhost:8080/sales_sauce`, {
+            const response = await fetch(`https://pom-and-honey-server.onrender.com/sales_sauce`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ const ExcessReport = () => {
     //
 
     const getSales1 = async (ingredient) => {
-        const response = await fetch(`http://localhost:8080/sales_ingr1`, {
+        const response = await fetch(`https://pom-and-honey-server.onrender.com/sales_ingr1`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ const ExcessReport = () => {
     //
 
     const getSales2 = async (sales, ingredient) => {
-        const response = await fetch(`http://localhost:8080/sales_ingr2`, {
+        const response = await fetch(`https://pom-and-honey-server.onrender.com/sales_ingr2`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ const ExcessReport = () => {
     //
 
     const getSales3 = async (sales, ingredient) => {
-        const response = await fetch(`http://localhost:8080/sales_ingr3`, {
+        const response = await fetch(`https://pom-and-honey-server.onrender.com/sales_ingr3`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -127,7 +127,7 @@ const ExcessReport = () => {
     //
 
     const getSales4 = async (sales, ingredient) => {
-        const response = await fetch(`http://localhost:8080/sales_ingr4`, {
+        const response = await fetch(`https://pom-and-honey-server.onrender.com/sales_ingr4`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -151,7 +151,7 @@ const ExcessReport = () => {
         else {
             ingredient.start_date = input.e_start_date;
         }        
-        const response = await fetch(`http://localhost:8080/restocks_after`, {
+        const response = await fetch(`https://pom-and-honey-server.onrender.com/restocks_after`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

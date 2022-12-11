@@ -22,7 +22,7 @@ const Manager = () => {
     }, [])
 
     const fetchCurrentUser = async () => {
-        const response = await fetch(`http://localhost:8080/user_info`, {
+        const response = await fetch(`https://pom-and-honey-server.onrender.com/user_info`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

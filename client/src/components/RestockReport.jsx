@@ -14,7 +14,7 @@ const RestockReport = () => {
 
         console.log("getRestockReport sends request");
         
-        const response = await fetch(`http://localhost:8080/restock_report`)
+        const response = await fetch(`https://pom-and-honey-server.onrender.com/restock_report`)
         response
             .json()
             .then(response => setRestockReport(response))

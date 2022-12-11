@@ -31,7 +31,7 @@ const ChangePassword = (props) => {
 
         console.log("changePassword sent request");
 
-        const response = await fetch('http://localhost:8080/change_password', {
+        const response = await fetch('https://pom-and-honey-server.onrender.com/change_password', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

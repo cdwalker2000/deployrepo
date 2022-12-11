@@ -27,7 +27,7 @@ const Login = () => {
     const logIn = async () => {
         console.log("logIn sends request");
         
-        const response = await fetch(`http://localhost:8080/credentials`, {
+        const response = await fetch(`https://pom-and-honey-server.onrender.com/credentials`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

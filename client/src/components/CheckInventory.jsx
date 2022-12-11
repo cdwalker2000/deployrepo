@@ -20,7 +20,7 @@ const CheckInventory = () => {
 
         console.log("getInventory sends request");
         
-        const response = await fetch(`http://localhost:8080/inventory`, {
+        const response = await fetch(`https://pom-and-honey-server.onrender.com/inventory`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

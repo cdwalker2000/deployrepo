@@ -15,7 +15,7 @@ const Proteins = (props) => {
 
 
     const fetchProteins = async () => {
-        const result = await fetch(`http://localhost:8080/proteins`)      // change to final deployment site
+        const result = await fetch(`https://pom-and-honey-server.onrender.com/proteins`)
         result
             .json()
             .then(result => setProteins(result))

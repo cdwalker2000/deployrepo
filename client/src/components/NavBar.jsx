@@ -22,7 +22,7 @@ const NavBar = (props) => {
     const cancelOrder = async () => {        
         console.log("clearCart sends response");
         
-        const response = await fetch('http://localhost:8080/clear_cart', {
+        const response = await fetch('https://pom-and-honey-server.onrender.com/clear_cart', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
